@@ -144,9 +144,9 @@ def dynamic_range_if(self, input_nodes, context):
 
 	print(input_nodes)
 	if between:
-		input_nodes[3].execute(context)
+		input_nodes[2].execute(context)
 	else:
-		input_nodes[4].execute(context)
+		input_nodes[3].execute(context)
 
 # define a primitive that generates a constant value upon first call
 @GeneticTree.declarePrimitive(ATTACKER, IP_ADDRESS, ())
