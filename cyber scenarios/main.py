@@ -23,9 +23,10 @@ if __name__ == "__main__":
     # manualTree.execute(context)
 
 
-    growTree = GeneticTree(ATTACKER, SERVICE)
-    growTree.initialize(3, grow=True)
+    Tree = GeneticTree(ATTACKER, SERVICE)
+    # Randomly Grow tree to a depth of 3 if possible
+    Tree.initialize(3, grow=True)
 
-    context = {"ip address": "192.168.1.200", "service": "ssh"}
-    AgentBob = SimpleAgent("BoB", growTree, context)
+    context = {"ip address": "192.168.1.200", "service": "sftp", "action": "getFile", "file": "filename"}
+    AgentBob = SimpleAgent("BoB", Tree, context)
     AgentBob.runAgent()

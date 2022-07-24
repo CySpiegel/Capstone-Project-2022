@@ -12,3 +12,9 @@ class SimpleAgent:
     def runAgent(self):
         self.actionsToTake(self.context)
     
+    def updateContext(self, context):
+        self.context = context
+    
+    def addToContext(self, key, action):
+        self.context[key] =  action
+    
