@@ -27,12 +27,18 @@ SFTPACTIONS = 'sftpactions'
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	service = context['service']		# parameter is a Dict with 'ip address'
-	# Validate IP range
 
-	if service == "sftp":
+	context['inform'] = "unknown"
+	#inform left vs right
+	lAction = input_nodes[0].execute(context)
+	rAction = input_nodes[1].execute(context)
+	context['inform'] = "known"
+
+	print("Targeting Service: ", service)
+	if service == lAction:
 		input_nodes[0].execute(context)
 		# sftp
-	elif service == "ssh":
+	elif service == rAction:
 		input_nodes[1].execute(context)
 	else:
 		# send to new tree
@@ -44,15 +50,15 @@ def hard_coded_range_if(self, input_nodes, context):
 #									SSH Declerations								 #
 ######################################################################################
 
-
-# only attackers can use this primitive, it's data type is IP_ACTION, and it
-# does not have any children (so it's a leaf node)
-# ssh login attack
-@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS,))
+# SSH Login Node. This will loginto the supplied address "ip address" found in context
+@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS,SSHACTIONS))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	action = context['action']		# parameter is a Dict with 'ip address'
-	# Validate IP range
+
+	inform = context['inform']
+	if inform == "unknown":
+		return "ssh"
 
 	if action == "getFile":
 		input_nodes[0].execute(context)
@@ -63,14 +69,22 @@ def hard_coded_range_if(self, input_nodes, context):
 		# send to new tree
 		exit(1)
 
+# SSH remote command that can be run using the active ssh connection
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
-def action0(self, input_nodes, context):
+def getfile(self, input_nodes, context):
+	inform = context['inform']
+	if inform == "unknown":
+		return "ssh"
+	
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
 	print('Chose SSH', ip_address)
 
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
-def action1(self, input_nodes, context):
+def putFile(self, input_nodes, context):
+	inform = context['inform']
+	if inform == "unknown":
+		return "ssh"
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
 	print('Chose SSH', ip_address)
@@ -82,10 +96,15 @@ def action1(self, input_nodes, context):
 #									SFTP Declerations								 #
 ######################################################################################
 
-@GeneticTree.declarePrimitive(ATTACKER, SFTP, (SFTPACTIONS,))
+@GeneticTree.declarePrimitive(ATTACKER, SFTP, (SFTPACTIONS,SFTPACTIONS))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	action = context['action']		# parameter is a Dict with 'ip address'
+
+	inform = context['inform']
+	if inform == "inform":
+		return "sftp"
+
 	if action == "getFile":
 		input_nodes[0].execute(context)
 		# sftp
@@ -97,53 +116,35 @@ def hard_coded_range_if(self, input_nodes, context):
 
 @GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
 def action0(self, input_nodes, context):
-	ip_address = context['ip address'] 	# we assume the provided context
-										# parameter is a Dict with 'ip address'
-	print('Chose SSH', ip_address)
-
-@GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
-def action1(self, input_nodes, context):
-	ip_address = context['ip address'] 	# we assume the provided context
-										# parameter is a Dict with 'ip address'
-	print('Chose SSH', ip_address)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# SFTP Actions
-@GeneticTree.declarePrimitive(ATTACKER, SFTP, ())
-def action0(self, input_nodes, context):
+	inform = context['inform']
+	if inform == "unknown":
+		return "sftp"
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
 	print('Chose SFTP', ip_address)
+
+@GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
+def action1(self, input_nodes, context):
+	inform = context['inform']
+	if inform == "unknown":
+		return "sftp"
+	ip_address = context['ip address'] 	# we assume the provided context
+										# parameter is a Dict with 'ip address'
+	print('Chose SFTP', ip_address)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

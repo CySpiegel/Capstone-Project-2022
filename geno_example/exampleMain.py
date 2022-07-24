@@ -13,6 +13,8 @@ def main():
 	testReturn = manualTree.execute(context)
 	print("test return value", testReturn)
 
+	manualTree.printTree()
+
 	# # example of randomly generating a tree where all branches go to some depth limit
 	# fullTree = GeneticTree(ATTACKER, IP_ACTION)
 	# fullTree.initialize(4, full=True)
