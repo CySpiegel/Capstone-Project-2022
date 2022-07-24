@@ -1,5 +1,4 @@
 from genotype import *
-from primitiveFunctions import *
 import random
 import socket 
 import os.path
@@ -63,7 +62,7 @@ def hard_coded_range_if(self, input_nodes, context):
 @GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS,SSHACTIONS))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
-	action = context['action']
+	action = context['action']		# parameter is a Dict with 'ip address'
 
 	inform = context['inform']
 	if inform == "unknown":
@@ -130,20 +129,6 @@ def hard_coded_range_if(self, input_nodes, context):
 	if inform == "unknown":
 		return "sftp"
 
-
-
-	context['inform'] = "unknown"
-	actions = {}
-
-	for node in input_nodes:
-		nodeAction = node.execute(context)
-		actions[nodeAction] = node
-
-	#if check needed to see is action is in dict
-	if action in actions:
-		actions[action].execute(context)
-	else:
-		print("The current action from context is dictionary of actions")
 	if action == "getFile":
 		input_nodes[0].execute(context)
 		# sftp
