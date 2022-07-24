@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, SERVICE)
-    Tree.initialize(3, full=True)
+    Tree.initialize(4, full=True)
     Tree.printTree()
 
     context = {"ip address": "192.168.1.200", "service": "ssh", "action": "getFile", "file": "filename"}
@@ -38,3 +38,5 @@ if __name__ == "__main__":
     AgentSmith = SimpleAgent("Smith", context)
     AgentSmith.randomTree()
     AgentSmith.run()
+
+    

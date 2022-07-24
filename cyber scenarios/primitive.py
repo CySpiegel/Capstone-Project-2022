@@ -1,4 +1,5 @@
 from genotype import *
+from primitiveFunctions import *
 import random
 import socket 
 import os.path
@@ -13,11 +14,15 @@ IP_ADDRESS = 'ip address'
 
 SERVICE = 'service'
 SSH = 'ssh'
-SFTP ='sftp'
 
 
 SSHACTIONS = 'sshactions'
+SSHACTIONSGET = 'sshactionsget'
+SSHACTIONSPUT = 'sshactionsput'
+
+SFTP ='sftp'
 SFTPACTIONS = 'sftpactions'
+SFTPACTIONSGET = 'sshactions'
 
 
 ######################################################################################
@@ -40,9 +45,11 @@ def hard_coded_range_if(self, input_nodes, context):
 
 	print("Targeting Service: ", service)
 	if service == lAction:
+		print("Choosing left Action")
 		input_nodes[0].execute(context)
 		# sftp
 	elif service == rAction:
+		print("Choosing right Action")
 		input_nodes[1].execute(context)
 	else:
 		# send to new tree
@@ -59,7 +66,7 @@ def hard_coded_range_if(self, input_nodes, context):
 ######################################################################################
 
 # SSH Login Node. This will loginto the supplied address "ip address" found in context
-@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS,SSHACTIONS))
+@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS,SSHACTIONS,SSHACTIONS))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	action = context['action']		# parameter is a Dict with 'ip address'
@@ -67,34 +74,27 @@ def hard_coded_range_if(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
 		return "ssh"
-
-	context['inform'] = "unknown"
-	actions = {}
-
-	for node in input_nodes:
-		nodeAction = node.execute(context)
-		actions[nodeAction] = node
-
-	#if check needed to see is action is in dict
-	if action in actions:
-		actions[action].execute(context)
-	else:
-		print("The current action from context is dictionary of actions")
-
 	
+	context['inform'] = "unknown"
+	print('SSH Input Node 0', input_nodes[0].execute(context))
+	print('SSH Input Node 1', input_nodes[1].execute(context))
+	print('SSH Input Node 2', input_nodes[1].execute(context))
+	print('SSH Input Node 3', input_nodes[1].execute(context))
 
-	# if action == "getFile":
-	# 	input_nodes[0].execute(context)
-	# 	# sftp
-	# elif action == "putFile":
-	# 	input_nodes[1].execute(context)
-	# else:
-	# 	# send to new tree
-	# 	exit(1)
+	print("Input Nodes ", input_nodes)
+	context['inform'] = 'known'
+
+	actions = {}
+	actions = dictActions(input_nodes, context)
+	context['inform'] = 'known'
+	print("Actions list",actions)
+	#actions[action].execute(context)
+	return performAction(actions, action, context)
 
 # SSH remote command that can be run using the active ssh connection
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
 def downloadFile(self, input_nodes, context):
+	# Inform the parrent node of what leaf i am
 	inform = context['inform']
 	if inform == "unknown":
 		return "getFile"
