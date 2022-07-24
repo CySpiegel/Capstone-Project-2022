@@ -1,5 +1,6 @@
 from genotype import *
 from primitive import *
+from simpleAgent import *
 
 
 
@@ -24,4 +25,7 @@ if __name__ == "__main__":
 
     growTree = GeneticTree(ATTACKER, SERVICE)
     growTree.initialize(3, grow=True)
-    
+
+    context = {"ip address": "192.168.1.200", "service": "ssh"}
+    AgentBob = SimpleAgent("BoB", growTree, context)
+    AgentBob.runAgent()

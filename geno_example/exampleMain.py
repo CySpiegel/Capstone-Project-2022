@@ -10,20 +10,21 @@ def main():
 	manualTree.root.children[1].func = action1
 
 	context = {'ip address': '111.111.111.111'}
-	manualTree.execute(context)
+	testReturn = manualTree.execute(context)
+	print("test return value", testReturn)
 
-	# example of randomly generating a tree where all branches go to some depth limit
-	fullTree = GeneticTree(ATTACKER, IP_ACTION)
-	fullTree.initialize(4, full=True)
+	# # example of randomly generating a tree where all branches go to some depth limit
+	# fullTree = GeneticTree(ATTACKER, IP_ACTION)
+	# fullTree.initialize(4, full=True)
 
-	fullTree.execute(context)
+	# fullTree.execute(context)
 
-	# example of randomly generating a tree where one branch goes to the depth
-	# limit and all other branches may or may not reach the depth limit
-	growTree = GeneticTree(ATTACKER, IP_ACTION)
-	growTree.initialize(4, grow=True)
+	# # example of randomly generating a tree where one branch goes to the depth
+	# # limit and all other branches may or may not reach the depth limit
+	# growTree = GeneticTree(ATTACKER, IP_ACTION)
+	# growTree.initialize(4, grow=True)
 
-	growTree.execute(context)
+	# growTree.execute(context)
 
 
 

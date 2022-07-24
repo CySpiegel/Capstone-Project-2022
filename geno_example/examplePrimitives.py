@@ -83,9 +83,11 @@ def hard_coded_range_if(self, input_nodes, context):
 
 	print(input_nodes)
 	if between:
-		input_nodes[0].execute(context)
+		test = input_nodes[0].execute(context)
+		return test
 	else:
-		input_nodes[1].execute(context)
+		test2 = input_nodes[1].execute(context)
+		return test2
 
 
 # only attackers can use this primitive, it's data type is IP_ACTION, and it
@@ -95,6 +97,7 @@ def action0(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
 	print('I performed action 0 on address', ip_address)
+	return "i have done this"
 
 # only attackers can use this primitive, it's data type is IP_ACTION, and it
 # does not have any children (so it's a leaf node)
@@ -103,6 +106,7 @@ def action1(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
 	print('I performed action 1 on address', ip_address)
+	return "i have done this"
 
 
 # only attackers can use this primitive, it's data type is IP_ACTION, and it 
