@@ -23,5 +23,5 @@ class SimpleAgent:
     def randomTree(self):
         # Randomly Grow tree to a depth of 3 if possible
         self.Tree = GeneticTree(ATTACKER, SERVICE)
-        self.Tree.initialize(3, grow=True)
+        self.Tree.initialize(3, full=True)
     

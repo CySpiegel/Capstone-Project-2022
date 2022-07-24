@@ -24,19 +24,17 @@ if __name__ == "__main__":
 
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, SERVICE)
-    Tree.initialize(3, grow=True)
+    Tree.initialize(3, full=True)
     Tree.printTree()
 
-    # context = {"ip address": "192.168.1.200", "service": "ssh", "action": "getFile", "file": "filename"}
-    # print("Agent Bob on the job")
-    # AgentBob = SimpleAgent("BoB", context, Tree)
-    # AgentBob.run()
+    context = {"ip address": "192.168.1.200", "service": "ssh", "action": "getFile", "file": "filename"}
+    print("Agent Bob on the job")
+    AgentBob = SimpleAgent("BoB", context, Tree)
+    AgentBob.run()
 
-    
+    print("Agent Smith on the job")
 
-    # print("Agent Smith on the job")
-
-    # context['service'] = 'sftp'
-    # AgentSmith = SimpleAgent("Smith", context)
-    # AgentSmith.randomTree()
-    # AgentSmith.run()
+    context['service'] = 'sftp'
+    AgentSmith = SimpleAgent("Smith", context)
+    AgentSmith.randomTree()
+    AgentSmith.run()
