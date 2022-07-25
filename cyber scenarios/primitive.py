@@ -1,8 +1,7 @@
 from genotype import *
 from primitiveFunctions import *
 from protocol_ssh import *
-import paramiko
-from scp import SCPClient
+
 import random
 import socket 
 import os.path
@@ -51,7 +50,7 @@ def hard_coded_range_if(self, input_nodes, context):
 
 # SSH Login Node. This will loginto the supplied address "ip address" found in context
 @GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS,SSHACTIONS,SSHACTIONS))
-def hard_coded_range_if(self, input_nodes, context):
+def determinSSHActions(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	action = context['action']		# get the current action from context
 	
@@ -65,20 +64,14 @@ def hard_coded_range_if(self, input_nodes, context):
 	username = context['username']
 	password = context['password']
 
-
-
-	timeout=5
-	remotecommand = "ls"
-
-	# TODO
-	# Create SSH connection object and pass it down through context
-	# Paramiko establish SSH connection and object here
-	# ssh = paramiko.SSHClient()
-	# ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-	# ssh.connect(ip_address, port, username, password)
-	# context['ssh'] = ssh
+	# Creating SSH Connection object and store it in context
+	# To pass through to SSH Action leafs
 	ssh = connect(ip_address, port, username, password)
+	# Storing SSH Object in context
 	context['ssh'] = ssh
+
+	# List of SSHACTIONS leaf nodes for possible execution
+	# 'action' in context must be set and possibly 'subaction' depending on leaf used
 	actions = {}
 	actions = dictActions(input_nodes, context)
 	return performAction(actions, action, context)
@@ -87,31 +80,25 @@ def hard_coded_range_if(self, input_nodes, context):
 # 		SSH remote command that can be run using the active ssh connection			 #
 ######################################################################################
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
-def downloadFile(self, input_nodes, context):
+def scpTransferFile(self, input_nodes, context):
 	# Inform the parrent node of what leaf action i am
 	inform = context['inform']
 	if inform == "unknown":
-		return "getFile"
+		return "scpTransferFile"
 
-	# TODO
-	# Use Paramiko SSH Object to run remote commands to download the targetFile
+	# What kind of tranfer
+
+	# Getting SSH object from context
 	ssh = context['ssh']
+	# Creating SCP object for file transfer
 	scp = SCPClient(ssh.get_transport())
-	scp.get("user.txt")
 
+	if context['subaction'] == 'download':
+		scp.get("user.txt")
+	if context['subaction'] == 'upload':
+		scp.get("user.txt")
 
-	print('Chose SSH download file from')
-
-@GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
-def uploadFile(self, input_nodes, context):
-	inform = context['inform']
-	if inform == "unknown":
-		return "putFile"
-	ip_address = context['ip address']
-
-	# TODO
-	# Use paramiko object to upload a file to the targegted ip address
-	print('Chose SSH upload file to', ip_address)
+	print('Chose SCP File Transfer through SSH Connection')
 
 
 ######################################################################################

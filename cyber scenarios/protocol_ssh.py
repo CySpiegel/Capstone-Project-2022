@@ -4,6 +4,7 @@ import subprocess
 
 # Third party
 import paramiko
+from scp import SCPClient
 
 
 def connect(dst_node_ip, port=22, username="root", password="", ssh_obj=None, timeout=1, **kwargs):
