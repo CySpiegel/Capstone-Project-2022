@@ -32,8 +32,8 @@ def buildGetFileFromRemoteSystem(context):
     targetIP = context['ip address']
     username = context['username']
     fileName = context['file']
-    remoteFilePath = context['remoteFilePath']
-    destinationFilePath = context['destinationFilePath']
+    remoteFilePath = context['remoteDir']
+    destinationFilePath = context['downloadDir']
 
     remotecommand = command + username + at + targetIP + colan + remoteFilePath + fileName + space + destinationFilePath
     return remotecommand

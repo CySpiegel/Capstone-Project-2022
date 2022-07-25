@@ -87,16 +87,23 @@ def scpTransferFile(self, input_nodes, context):
 		return "scpTransferFile"
 
 	# What kind of tranfer
-
+	subaction = context['subaction']
+	fileName = context['file']
+	remoteDirectory = context['remoteDir']
+	downloadDir = context['downloadDir']
 	# Getting SSH object from context
 	ssh = context['ssh']
 	# Creating SCP object for file transfer
 	scp = SCPClient(ssh.get_transport())
 
-	if context['subaction'] == 'download':
-		scp.get("user.txt")
-	if context['subaction'] == 'upload':
-		scp.get("user.txt")
+	if subaction == 'downloadFile':
+		scp.get(fileName, local_path=downloadDir)
+
+	if subaction == 'downloadDirectory':
+		scp.get(remoteDirectory, local_path=downloadDir, recursive=True)
+
+	if subaction == 'uploadFile':
+		scp.get(fileName)
 
 	print('Chose SCP File Transfer through SSH Connection')
 
