@@ -1,6 +1,8 @@
+from os import lseek
 from genotype import *
 from primitive import *
 from simpleAgent import *
+from primitiveFunctions import *
 
 
 
@@ -27,15 +29,16 @@ if __name__ == "__main__":
     Tree.initialize(4, full=True)
     Tree.printTree()
 
-    context = {"ip address": "192.168.1.200", "service": "ssh", "action": "getFile", "file": "filename"}
+    context = {"ip address": "192.168.1.124", "service": "ssh", "port": 22, "action": "getFile", "file": "user.txt", "remoteFilePath": "/home/spiegel/", "destinationFilePath": "/home/spiegel/Desktop","username": "spiegel", "password": "1226"}
     
     print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", context, Tree)
+    AgentBob.hostIP()
     AgentBob.run()
 
-    print("\n\nAgent Smith on the job")
+    # print("\n\nAgent Smith on the job")
 
-    context['service'] = 'sftp'
-    AgentSmith = SimpleAgent("Smith", context)
-    AgentSmith.randomTree()
-    AgentSmith.run()
+    # context['service'] = 'sftp'
+    # AgentSmith = SimpleAgent("Smith", context)
+    # AgentSmith.randomTree()
+    # AgentSmith.run()

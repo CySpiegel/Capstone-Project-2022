@@ -1,12 +1,15 @@
 import genotype
 from genotype import *
 from primitive import *
+from primitiveFunctions import *
 
 class SimpleAgent:
     def __init__(self, name, context, decisionTree = 0):
         self.name = name
         self.Tree = decisionTree
         self.context = context
+        self.context["localIP"] = extract_ip()
+
 
     def actionsToTake(self, context):
         self.Tree.execute(context)
@@ -24,4 +27,7 @@ class SimpleAgent:
         # Randomly Grow tree to a depth of 3 if possible
         self.Tree = GeneticTree(ATTACKER, SERVICE)
         self.Tree.initialize(3, full=True)
-    
+
+    def hostIP(self):
+        hostIP = self.context['localIP']
+        return hostIP

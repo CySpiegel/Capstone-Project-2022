@@ -3,3 +3,4 @@
 src/server/__pycache__/
 src/client/__pycache__/
 *.pyc
+/venv-capstone/

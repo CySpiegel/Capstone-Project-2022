@@ -76,6 +76,7 @@ def send_command(ssh_obj, command, **kwargs):
     :rtype: tuple
     """
     stdin, stdout, stderr = ssh_obj.exec_command(command, **kwargs)
+    stdin.write("1226\n")
     exit_code = stdout.channel.recv_exit_status()
 
     if exit_code == 0:
