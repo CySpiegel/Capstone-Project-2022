@@ -39,25 +39,13 @@ def hard_coded_range_if(self, input_nodes, context):
 	rAction = input_nodes[1].execute(context)
 	context['inform'] = "known"
 
-	
-	print("L Action: ",lAction)
-	print("r Action: ", rAction)
+	# Perform action from services context
+	# this will allow for expansion of child nodes for more services
+	context['inform'] = 'known'
+	services = {}
+	services = dictActions(input_nodes, context)
+	return performAction(services, service, context)
 
-	print("Targeting Service: ", service)
-	if service == lAction:
-		print("Choosing left Action")
-		input_nodes[0].execute(context)
-		# sftp
-	elif service == rAction:
-		print("Choosing right Action")
-		input_nodes[1].execute(context)
-	else:
-		# send to new tree
-		print("L Action: ",lAction)
-		print("r Action: ", rAction)
-
-
-		exit(1)
 
 
 
@@ -74,21 +62,9 @@ def hard_coded_range_if(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
 		return "ssh"
-	
-	context['inform'] = "unknown"
-	print('SSH Input Node 0', input_nodes[0].execute(context))
-	print('SSH Input Node 1', input_nodes[1].execute(context))
-	print('SSH Input Node 2', input_nodes[1].execute(context))
-	print('SSH Input Node 3', input_nodes[1].execute(context))
-
-	print("Input Nodes ", input_nodes)
-	context['inform'] = 'known'
 
 	actions = {}
 	actions = dictActions(input_nodes, context)
-	context['inform'] = 'known'
-	print("Actions list",actions)
-	#actions[action].execute(context)
 	return performAction(actions, action, context)
 
 # SSH remote command that can be run using the active ssh connection
@@ -129,14 +105,9 @@ def hard_coded_range_if(self, input_nodes, context):
 	if inform == "unknown":
 		return "sftp"
 
-	if action == "getFile":
-		input_nodes[0].execute(context)
-		# sftp
-	elif action == "putFile":
-		input_nodes[1].execute(context)
-	else:
-		# send to new tree
-		exit(1)
+	actions = {}
+	actions = dictActions(input_nodes, context)
+	return performAction(actions, action, context)
 
 @GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
 def action0(self, input_nodes, context):

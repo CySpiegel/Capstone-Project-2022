@@ -6,6 +6,7 @@ def dictActions(input_nodes, context):
     for node in input_nodes:
         nodeAction = node.execute(context)
         actions[nodeAction] = node
+    context['inform'] = 'known'
     return actions
 
 # Perform the nodes action based on context
@@ -13,5 +14,17 @@ def performAction(actions, action, context):
     if action in actions:
         return actions[action].execute(context)
     else:
-        print("The current action from context is dictionary of actions")
+        return throwError(1)
+
+
+def throwError(error):
+    errorTable = {}
+    errorTable[1] = "The current action from context is not found in the dictionary of actions provided. Please check" 
     
+
+
+
+
+    
+    print(errorTable[error])
+    return errorTable[error]
