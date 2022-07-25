@@ -26,22 +26,17 @@ SFTPACTIONSGET = 'sshactions'
 
 
 ######################################################################################
-#									SERVICE Declerations								 #
+#									SERVICE Declerations							 #
 ######################################################################################
+# This is the root primitive of the Services node. 
+
 @GeneticTree.declarePrimitive(ATTACKER, SERVICE, (SFTP, SSH))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	service = context['service']		# parameter is a Dict with 'ip address'
 
-	context['inform'] = "unknown"
-	#inform left vs right
-	lAction = input_nodes[0].execute(context)
-	rAction = input_nodes[1].execute(context)
-	context['inform'] = "known"
-
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
-	context['inform'] = 'known'
 	services = {}
 	services = dictActions(input_nodes, context)
 	return performAction(services, service, context)
@@ -63,11 +58,16 @@ def hard_coded_range_if(self, input_nodes, context):
 	if inform == "unknown":
 		return "ssh"
 
+	# TODO
+	# Create SSH connection object and pass it down through context
+
 	actions = {}
 	actions = dictActions(input_nodes, context)
 	return performAction(actions, action, context)
 
-# SSH remote command that can be run using the active ssh connection
+######################################################################################
+# 		SSH remote command that can be run using the active ssh connection			 #
+######################################################################################
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
 def downloadFile(self, input_nodes, context):
 	# Inform the parrent node of what leaf i am
@@ -95,7 +95,7 @@ def uploadFile(self, input_nodes, context):
 ######################################################################################
 #									SFTP Declerations								 #
 ######################################################################################
-
+# Root SFTP Node to create SFTP Object 
 @GeneticTree.declarePrimitive(ATTACKER, SFTP, (SFTPACTIONS, SFTPACTIONS))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
