@@ -19,12 +19,13 @@ def performAction(actions, action, context):
 
 def throwError(error):
     errorTable = {}
-    errorTable[1] = "The current action from context is not found in the dictionary of actions provided. Please check" 
+    errorTable[1] = "The current action from context is not found in the dictionary of actions provided. \
+    Please check that leaf nodes are being generatted correctly. Most common issue is the leaf was not generated." 
     
 
 
 
 
-    
+
     print(errorTable[error])
     return errorTable[error]

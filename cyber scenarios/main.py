@@ -29,15 +29,13 @@ if __name__ == "__main__":
 
     context = {"ip address": "192.168.1.200", "service": "ssh", "action": "getFile", "file": "filename"}
     
-    print("\n\n\nAgent Bob on the job")
+    print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", context, Tree)
     AgentBob.run()
 
-    print("\n\n\nAgent Smith on the job")
+    print("\n\nAgent Smith on the job")
 
     context['service'] = 'sftp'
     AgentSmith = SimpleAgent("Smith", context)
     AgentSmith.randomTree()
     AgentSmith.run()
-
-    
