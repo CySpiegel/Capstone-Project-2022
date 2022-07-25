@@ -9,17 +9,15 @@ import time
 ATTACKER = 'attacker'
 
 # defining data types of primitives as constant strings
-IP_ACTION = 'ip action'
-IP_ADDRESS = 'ip address'
-
 SERVICE = 'service'
+
+# SSH
 SSH = 'ssh'
-
-
 SSHACTIONS = 'sshactions'
 SSHACTIONSGET = 'sshactionsget'
 SSHACTIONSPUT = 'sshactionsput'
 
+# SFTP
 SFTP ='sftp'
 SFTPACTIONS = 'sftpactions'
 SFTPACTIONSGET = 'sshactions'
@@ -28,8 +26,8 @@ SFTPACTIONSGET = 'sshactions'
 ######################################################################################
 #									SERVICE Declerations							 #
 ######################################################################################
-# This is the root primitive of the Services node. 
 
+# This is the root primitive of the Services node. 
 @GeneticTree.declarePrimitive(ATTACKER, SERVICE, (SFTP, SSH))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
@@ -52,7 +50,7 @@ def hard_coded_range_if(self, input_nodes, context):
 @GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS,SSHACTIONS,SSHACTIONS))
 def hard_coded_range_if(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
-	action = context['action']		# parameter is a Dict with 'ip address'
+	action = context['action']		# get the current action from context
 
 	inform = context['inform']
 	if inform == "unknown":
@@ -60,6 +58,7 @@ def hard_coded_range_if(self, input_nodes, context):
 
 	# TODO
 	# Create SSH connection object and pass it down through context
+	# Paramiko establish SSH connection and object here
 
 	actions = {}
 	actions = dictActions(input_nodes, context)
@@ -74,9 +73,12 @@ def downloadFile(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
 		return "getFile"
-	
-	ip_address = context['ip address'] 	# we assume the provided context
-										# parameter is a Dict with 'ip address'
+
+	ip_address = context['ip address'] # Get the Target IP address
+
+	# TODO
+	# Use Paramiko SSH Object to run remote commands to download the targetFile
+
 	print('Chose SSH download file from', ip_address)
 
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
@@ -84,8 +86,10 @@ def uploadFile(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
 		return "putFile"
-	ip_address = context['ip address'] 	# we assume the provided context
-										# parameter is a Dict with 'ip address'
+	ip_address = context['ip address']
+
+	# TODO
+	# Use paramiko object to upload a file to the targegted ip address
 	print('Chose SSH upload file to', ip_address)
 
 
