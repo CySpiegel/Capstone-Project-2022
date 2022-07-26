@@ -168,6 +168,11 @@ def sftp(self, input_nodes, context):
 
 
 # SFTP File Transfer
+# directory knowledge is a must know because
+# SFTP works from the root source of where the environment is run from
+# It tends to start local directory from project root folder
+# remote directory is root from whereever SFTP configureation is set
+# this is generally the users home directory
 @GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
 def transferFiles(self, input_nodes, context):
 	inform = context['inform']
@@ -188,16 +193,20 @@ def transferFiles(self, input_nodes, context):
 	#establishing sftp connection from ssh trannsport object session
 	sftp = paramiko.SFTPClient.from_transport(transport)
 
-	# Download File
-	source = buildFilePath(remoteDirectory, fileName)
-	print(source)
-	destination = buildFilePath(localDirectory, fileName)
-	print(destination)
+
+
 
 	if subaction == "downloadFile":
+		# Download File
+		source = buildFilePath(remoteDirectory, fileName)
+		destination = buildFilePath(localDirectory, fileName)
 		sftp.get(source, destination)
 
 	if subaction == "uploadFile":
+		source = "testing.txt"
+
+		source = buildFilePath(localDirectory, fileName)
+		destination = buildFilePath(remoteDirectory, fileName)
 		sftp.put(source, destination)
 
 	sftp.close()

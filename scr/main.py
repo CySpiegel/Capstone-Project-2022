@@ -76,7 +76,7 @@ if __name__ == "__main__":
                                 "username": "spiegel",
                                 "password": "1226"
                                 }
-
+    # See the geneticTree sftp primitive on how to use SFTP
     sftpDownloadFile =  {"ip address": "192.168.1.124",
                         "service": "sftp",
                         "port": 22,
@@ -96,7 +96,7 @@ if __name__ == "__main__":
                         "subaction":"uploadFile",
                         "localDirectory": "downloads/sftp",
                         "remoteDirectory": "flags",
-                        "file": "user1.txt",
+                        "file": "testing.txt",
                         "username": "spiegel",
                         "password": "1226"
                         }
