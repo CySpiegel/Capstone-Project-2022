@@ -90,20 +90,21 @@ def scpTransferFile(self, input_nodes, context):
 	subaction = context['subaction']
 	fileName = context['file']
 	remoteDirectory = context['remoteDir']
-	downloadDir = context['downloadDir']
+	downloadDirectory = context['downloadDir']
+	localDirectory = context['localDir']
 	# Getting SSH object from context
 	ssh = context['ssh']
 	# Creating SCP object for file transfer
 	scp = SCPClient(ssh.get_transport())
 
 	if subaction == 'downloadFile':
-		scp.get(fileName, local_path=downloadDir)
+		scp.get(fileName, local_path=downloadDirectory)
 
 	if subaction == 'downloadDirectory':
-		scp.get(remoteDirectory, local_path=downloadDir, recursive=True)
+		scp.get(remoteDirectory, local_path=downloadDirectory, recursive=True)
 
 	if subaction == 'uploadFile':
-		scp.put("/home/spiegel/Capstone-Project-2022/scenarios/myBinaries/"+"testing.txt", remoteDirectory)
+		scp.put(localDirectory+"/"+fileName, remoteDirectory)
 
 	if subaction == "uploadDirectory":
 		scp.put("/home/spiegel/Capstone-Project-2022/scenarios", remoteDirectory, recursive=True)
@@ -112,6 +113,10 @@ def scpTransferFile(self, input_nodes, context):
 
 
 
+# Replicate and launch agend on remote system
+@GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
+def replicateAgent(self, input_nodes, context):
+	pass
 
 
 

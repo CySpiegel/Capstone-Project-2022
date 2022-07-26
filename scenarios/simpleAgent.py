@@ -2,6 +2,9 @@ import genotype
 from genotype import *
 from primitive import *
 from primitiveFunctions import *
+import sys
+import os
+
 
 class SimpleAgent:
     def __init__(self, name, context, decisionTree = 0):
@@ -32,3 +35,6 @@ class SimpleAgent:
     def hostIP(self):
         hostIP = self.context['localIP']
         return hostIP
+
+    def smithWasHere():
+        pass
