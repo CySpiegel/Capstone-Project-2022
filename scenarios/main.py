@@ -29,16 +29,18 @@ if __name__ == "__main__":
     Tree.initialize(4, full=True)
     Tree.printTree()
 
-    context = {"ip address": "192.168.1.124", "service": "ssh", "port": 22, "action": "scpTransferFile", "subaction":"downloadDirectory","file": "user.txt", "remoteDir": "/home/spiegel/flags", "downloadDir": "/home/spiegel/Capstone-Project-2022/downloads","username": "spiegel", "password": "1226"}
+    context = {"ip address": "192.168.1.124", "service": "ssh", "port": 22, "action": "scpTransferFile", "subaction":"uploadDirectory","file": "user.txt", "remoteDir": "/home/spiegel/flags", "downloadDir": "/home/spiegel/Capstone-Project-2022/downloads","username": "spiegel", "password": "1226"}
     
     print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", context, Tree)
     AgentBob.hostIP()
     AgentBob.run()
 
-    # print("\n\nAgent Smith on the job")
+    print("\n\nAgent Smith on the job")
 
-    context['service'] = 'sftp'
-    AgentSmith = SimpleAgent("Smith", context)
-    AgentSmith.randomTree()
-    AgentSmith.run()
+    # Agent Smith
+    # Main goal: Replicate itself across the
+    # context['service'] = 'sftp'
+    # AgentSmith = SimpleAgent("Smith", context)
+    # AgentSmith.randomTree()
+    # AgentSmith.run()

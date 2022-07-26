@@ -103,12 +103,19 @@ def scpTransferFile(self, input_nodes, context):
 		scp.get(remoteDirectory, local_path=downloadDir, recursive=True)
 
 	if subaction == 'uploadFile':
-		scp.put(fileName)
+		scp.put("/home/spiegel/Capstone-Project-2022/scenarios/myBinaries/"+"testing.txt", remoteDirectory)
 
 	if subaction == "uploadDirectory":
-		scp.put(remoteDirectory, local_path=downloadDir, recursive=True)
+		scp.put("/home/spiegel/Capstone-Project-2022/scenarios", remoteDirectory, recursive=True)
 
 	print('Chose SCP File Transfer through SSH Connection')
+
+
+
+
+
+
+
 
 
 ######################################################################################
@@ -128,6 +135,10 @@ def hard_coded_range_if(self, input_nodes, context):
 	actions = dictActions(input_nodes, context)
 	return performAction(actions, action, context)
 
+
+
+
+# SFTP File Transfer
 @GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
 def action0(self, input_nodes, context):
 	inform = context['inform']
