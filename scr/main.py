@@ -77,17 +77,29 @@ if __name__ == "__main__":
                                 "password": "1226"
                                 }
 
-    sftpContext =  {"ip address": "192.168.1.124",
-                    "service": "sftp",
-                    "port": 22,
-                    "action": "transferFile",
-                    "subaction":"downloadFile",
-                    "localDirectory": "downloads/sftp",
-                    "remoteDirectory": "flags",
-                    "file": "user1.txt",
-                    "username": "spiegel",
-                    "password": "1226"
-                    }
+    sftpDownloadFile =  {"ip address": "192.168.1.124",
+                        "service": "sftp",
+                        "port": 22,
+                        "action": "transferFile",
+                        "subaction":"downloadFile",
+                        "localDirectory": "downloads/sftp",
+                        "remoteDirectory": "flags",
+                        "file": "user1.txt",
+                        "username": "spiegel",
+                        "password": "1226"
+                        }
+
+    sftpUploadFile =  {"ip address": "192.168.1.124",
+                        "service": "sftp",
+                        "port": 22,
+                        "action": "transferFile",
+                        "subaction":"uploadFile",
+                        "localDirectory": "downloads/sftp",
+                        "remoteDirectory": "flags",
+                        "file": "user1.txt",
+                        "username": "spiegel",
+                        "password": "1226"
+                        }
 
     replicate =    {"ip address": "192.168.1.124",
                     "service": "ssh",
@@ -103,7 +115,7 @@ if __name__ == "__main__":
 
 
     print("\n\nAgent Bob on the job")
-    AgentBob = SimpleAgent("BoB", sftpContext, Tree)
+    AgentBob = SimpleAgent("BoB", sftpUploadFile, Tree)
     AgentBob.hostIP()
     AgentBob.run()
 
