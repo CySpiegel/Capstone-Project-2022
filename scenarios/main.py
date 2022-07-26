@@ -32,16 +32,26 @@ if __name__ == "__main__":
     context = {"ip address": "192.168.1.124",
                 "service": "ssh",
                 "port": 22,
-                "action": "scpTransferFile",
-                "subaction":"uploadDirectory",
-                "file": "user.txt",
-                "localDir": "",
-                "remoteDir": "/home/spiegel/flags",
-                "downloadDir": "/home/spiegel/Capstone-Project-2022/downloads",
+                "action": "transferFile",
+                "subaction":"downloadFile",
+                "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/downloads",
+                "remoteDirectory": "/home/spiegel/flags",
+                "fileName": "user1.txt",
                 "username": "spiegel",
                 "password": "1226"
                 }
-    
+
+    sftpContext = {"ip address": "192.168.1.124",
+                    "service": "sftp",
+                    "port": 22,
+                    "action": "transferFile",
+                    "subaction":"uploadFile",
+                    "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/downloads",
+                    "remoteDirectory": "/home/spiegel/flags",
+                    "file": "user.txt",
+                    "username": "spiegel",
+                    "password": "1226"
+                    }
     print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", context, Tree)
     AgentBob.hostIP()
@@ -52,6 +62,6 @@ if __name__ == "__main__":
     # Agent Smith
     # Main goal: Replicate itself across the
     # context['service'] = 'sftp'
-    # AgentSmith = SimpleAgent("Smith", context)
+    # AgentSmith = SimpleAgent("Smith")
     # AgentSmith.randomTree()
     # AgentSmith.run()

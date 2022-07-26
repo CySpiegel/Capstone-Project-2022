@@ -22,37 +22,8 @@ def buildContext(context):
     context = {"ip address": "192.168.1.124", "service": "ssh", "action": "getFile", "file": "user.txt", "filepath": "/home/spiegel/", "username": "spiegel", "password": "1226"}
     return context
 
-
-def buildGetFileFromRemoteSystem(context):
-    remotecommand = ""
-    command = "scp "
-    at = "@"
-    colan = ":"
-    space = " "
-    targetIP = context['ip address']
-    username = context['username']
-    fileName = context['file']
-    remoteFilePath = context['remoteDir']
-    destinationFilePath = context['downloadDir']
-
-    remotecommand = command + username + at + targetIP + colan + remoteFilePath + fileName + space + destinationFilePath
-    return remotecommand
-
-def sendToRemoteSystem(context, targetAddress):
-    remotecommand = ""
-    command = "scp "
-    at = "@"
-    colan = ":"
-    space = " "
-    targetIP = targetAddress
-    username = context['username']
-    fileName = context['file']
-    destinationFilePath = context['destinationFilePath']
-    extra = ";1226\n"
-
-    remotecommand = command + fileName + space + username + at + targetIP + colan + destinationFilePath
-
-    return remotecommand
+def buildFilePath(path, fileName):
+    return path + "/" + fileName
 
 def extract_ip():
     st = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

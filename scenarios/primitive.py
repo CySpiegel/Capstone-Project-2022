@@ -1,6 +1,10 @@
+from fileinput import filename
 from genotype import *
 from primitiveFunctions import *
 from protocol_ssh import *
+from ftplib import FTP
+from scp import SCPClient
+import scp
 
 import random
 import socket 
@@ -16,13 +20,16 @@ SERVICE = 'service'
 # SSH
 SSH = 'ssh'
 SSHACTIONS = 'sshactions'
-SSHACTIONSGET = 'sshactionsget'
-SSHACTIONSPUT = 'sshactionsput'
 
 # SFTP
 SFTP ='sftp'
 SFTPACTIONS = 'sftpactions'
-SFTPACTIONSGET = 'sshactions'
+
+# RECON
+RECON = 'recon'
+RECONACTIONS = 'reconactions'
+
+
 
 
 ######################################################################################
@@ -49,7 +56,7 @@ def hard_coded_range_if(self, input_nodes, context):
 ######################################################################################
 
 # SSH Login Node. This will loginto the supplied address "ip address" found in context
-@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS,SSHACTIONS,SSHACTIONS))
+@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS))
 def determinSSHActions(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	action = context['action']		# get the current action from context
@@ -66,7 +73,7 @@ def determinSSHActions(self, input_nodes, context):
 
 	# Creating SSH Connection object and store it in context
 	# To pass through to SSH Action leafs
-	ssh = connect(ip_address, port, username, password)
+	ssh = ssh_connect(ip_address, port, username, password)
 	# Storing SSH Object in context
 	context['ssh'] = ssh
 
@@ -74,6 +81,7 @@ def determinSSHActions(self, input_nodes, context):
 	# 'action' in context must be set and possibly 'subaction' depending on leaf used
 	actions = {}
 	actions = dictActions(input_nodes, context)
+	print("action", action)
 	return performAction(actions, action, context)
 
 ######################################################################################
@@ -84,36 +92,41 @@ def scpTransferFile(self, input_nodes, context):
 	# Inform the parrent node of what leaf action i am
 	inform = context['inform']
 	if inform == "unknown":
-		return "scpTransferFile"
+		return "transferFile"
 
 	# What kind of tranfer
 	subaction = context['subaction']
-	fileName = context['file']
-	remoteDirectory = context['remoteDir']
-	downloadDirectory = context['downloadDir']
-	localDirectory = context['localDir']
+	fileName = context['fileName']
+	remoteDirectory = context['remoteDirectory']
+	localDirectory = context['localDirectory']
+
+	remoteFile = buildFilePath(remoteDirectory, fileName)
+	localFile = buildFilePath(localDirectory, fileName)
+
 	# Getting SSH object from context
 	ssh = context['ssh']
 	# Creating SCP object for file transfer
 	scp = SCPClient(ssh.get_transport())
 
 	if subaction == 'downloadFile':
-		scp.get(fileName, local_path=downloadDirectory)
+		print("Downloading File", fileName, localDirectory)
+		scp.get(remoteFile, local_path=localDirectory)
 
 	if subaction == 'downloadDirectory':
-		scp.get(remoteDirectory, local_path=downloadDirectory, recursive=True)
+		scp.get(remoteDirectory, local_path=localDirectory, recursive=True)
 
 	if subaction == 'uploadFile':
-		scp.put(localDirectory+"/"+fileName, remoteDirectory)
+		scp.put(localFile, remoteDirectory)
 
 	if subaction == "uploadDirectory":
-		scp.put("/home/spiegel/Capstone-Project-2022/scenarios", remoteDirectory, recursive=True)
+		scp.put(localDirectory, remoteDirectory, recursive=True)
 
-	print('Chose SCP File Transfer through SSH Connection')
+	ssh.close()
+	print('SCP Files Transfered')
 
 
 
-# Replicate and launch agend on remote system
+# Replicate and launch agent on remote system
 @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
 def replicateAgent(self, input_nodes, context):
 	pass
@@ -128,13 +141,24 @@ def replicateAgent(self, input_nodes, context):
 ######################################################################################
 # Root SFTP Node to create SFTP Object 
 @GeneticTree.declarePrimitive(ATTACKER, SFTP, (SFTPACTIONS, SFTPACTIONS))
-def hard_coded_range_if(self, input_nodes, context):
+def sftp(self, input_nodes, context):
 	ip_address = context['ip address'] 	# we assume the provided context
 	action = context['action']		# parameter is a Dict with 'ip address'
 
 	inform = context['inform']
 	if inform == "unknown":
 		return "sftp"
+
+	# getting SSH parameters from context
+	port = context['port']
+	username = context['username']
+	password = context['password']
+	# Creating SSH Connection object and store it in context
+	# To pass through to SSH Action leafs
+	ssh = ssh_connect(ip_address, port, username, password)
+	# Storing SSH Object in context
+	context['ssh'] = ssh
+
 
 	actions = {}
 	actions = dictActions(input_nodes, context)
@@ -145,36 +169,71 @@ def hard_coded_range_if(self, input_nodes, context):
 
 # SFTP File Transfer
 @GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
-def action0(self, input_nodes, context):
+def transferFiles(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
-		return "getFile"
+		return "transferFile"
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
-	print('Chose SFTP getFile', ip_address)
 
-@GeneticTree.declarePrimitive(ATTACKER, SFTPACTIONS, ())
-def action1(self, input_nodes, context):
+	# What kind of tranfer
+	subaction = context['subaction']
+	fileName = context['file']
+	remoteDirectory = context['remoteDir']
+	downloadDirectory = context['downloadDir']
+	localDirectory = context['localDir']
+	# Getting SSH object from context
+	ssh = context['ssh']
+	# Creating SCP object for file transfer
+	transport = ssh.get_transport()
+
+	sftp = paramiko.SFTPClient.from_transport(transport)
+
+	# Download File
+	source = buildFilePath(context['remoteDir'], context['file'])
+	destination = buildFilePath(context['localDir'], context['file'])
+	sftp.get(source, destination)
+	sftp.close()
+	print('Chose SFTP File Transfer', ip_address)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######################################################################################
+#									Recon Declerations								 #
+######################################################################################
+# Root SFTP Node to create SFTP Object 
+@GeneticTree.declarePrimitive(ATTACKER, RECON, (RECONACTIONS, RECONACTIONS))
+def ReplicateAgent(self, input_nodes, context):
+	action = context['action']		# what action is stored in context
 	inform = context['inform']
 	if inform == "unknown":
-		return "putFile"
+		return "recon"
+
+	# Actions available definer
+	actions = {}
+	actions = dictActions(input_nodes, context)
+	return performAction(actions, action, context)
+
+# SFTP File Transfer
+@GeneticTree.declarePrimitive(ATTACKER, RECONACTIONS, ())
+def mapNetwork(self, input_nodes, context):
+	inform = context['inform']
+	if inform == "unknown":
+		return "mapNetwork"
+
+
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
-	print('Chose SFTP putFile', ip_address)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	print('Mapping Network', ip_address)

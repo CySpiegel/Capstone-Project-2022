@@ -4,10 +4,10 @@ import subprocess
 
 # Third party
 import paramiko
-from scp import SCPClient
 
 
-def connect(dst_node_ip, port=22, username="root", password="", ssh_obj=None, timeout=1, **kwargs):
+
+def ssh_connect(dst_node_ip, port=22, username="root", password="", ssh_obj=None, timeout=1, **kwargs):
     """
     Creates an ssh connection between two nodes. The object returned can be used
     as a reference to the SSH connection and treated just as a regular ssh
