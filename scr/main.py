@@ -81,10 +81,10 @@ if __name__ == "__main__":
                     "service": "sftp",
                     "port": 22,
                     "action": "transferFile",
-                    "subaction":"uploadFile",
-                    "localDirectory": "/home/spiegel/Capstone-Project-2022/downloads",
-                    "remoteDirectory": "/home/spiegel/flags",
-                    "file": "user.txt",
+                    "subaction":"downloadFile",
+                    "localDirectory": "sftp",
+                    "remoteDirectory": "flags",
+                    "file": "user1.txt",
                     "username": "spiegel",
                     "password": "1226"
                     }
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
 
     print("\n\nAgent Bob on the job")
-    AgentBob = SimpleAgent("BoB", downloadDirectorySSHSCP, Tree)
+    AgentBob = SimpleAgent("BoB", sftpContext, Tree)
     AgentBob.hostIP()
     AgentBob.run()
 

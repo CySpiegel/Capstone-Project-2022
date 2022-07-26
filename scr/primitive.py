@@ -179,19 +179,20 @@ def transferFiles(self, input_nodes, context):
 	# What kind of tranfer
 	subaction = context['subaction']
 	fileName = context['file']
-	remoteDirectory = context['remoteDir']
-	downloadDirectory = context['downloadDir']
-	localDirectory = context['localDir']
+	remoteDirectory = context['remoteDirectory']
+	localDirectory = context['localDirectory']
 	# Getting SSH object from context
 	ssh = context['ssh']
-	# Creating SCP object for file transfer
+	# getting transport object
 	transport = ssh.get_transport()
-
+	#establishing sftp connection from ssh trannsport object session
 	sftp = paramiko.SFTPClient.from_transport(transport)
 
 	# Download File
-	source = buildFilePath(context['remoteDir'], context['file'])
-	destination = buildFilePath(context['localDir'], context['file'])
+	source = buildFilePath(remoteDirectory, fileName)
+	print(source)
+	destination = buildFilePath(localDirectory, fileName)
+	print(destination)
 	sftp.get(source, destination)
 	sftp.close()
 	print('Chose SFTP File Transfer', ip_address)
