@@ -1,4 +1,3 @@
-from os import lseek
 from genotype import *
 from primitive import *
 from simpleAgent import *
@@ -7,6 +6,7 @@ from primitiveFunctions import *
 
 
 if __name__ == "__main__":
+
     # # defining types of agents as constant strings
     # ATTACKER = 'attacker'
 
@@ -29,12 +29,12 @@ if __name__ == "__main__":
     Tree.initialize(4, full=True)
     Tree.printTree()
 
-    downloadFileSSH = {"ip address": "192.168.1.124",
+    downloadFileSSH =  {"ip address": "192.168.1.124",
                         "service": "ssh",
                         "port": 22,
                         "action": "transferFile",
                         "subaction":"downloadFile",
-                        "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/downloads",
+                        "localDirectory": "/home/spiegel/Capstone-Project-2022/downloads",
                         "remoteDirectory": "/home/spiegel/flags",
                         "fileName": "user1.txt",
                         "username": "spiegel",
@@ -46,7 +46,7 @@ if __name__ == "__main__":
                     "port": 22,
                     "action": "transferFile",
                     "subaction":"uploadFile",
-                    "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/binaries",
+                    "localDirectory": "/home/spiegel/Capstone-Project-2022/binaries",
                     "remoteDirectory": "/home/spiegel/flags",
                     "fileName": "virus.txt",
                     "username": "spiegel",
@@ -58,36 +58,50 @@ if __name__ == "__main__":
                             "port": 22,
                             "action": "transferFile",
                             "subaction":"uploadDirectory",
-                            "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/binaries",
+                            "localDirectory": "/home/spiegel/Capstone-Project-2022/binaries",
                             "remoteDirectory": "/home/spiegel",
                             "fileName": "virus.txt",
                             "username": "spiegel",
                             "password": "1226"
                             }
 
-    downloadDirectorySSHSCP = {"ip address": "192.168.1.124",
-                            "service": "ssh",
-                            "port": 22,
-                            "action": "transferFile",
-                            "subaction":"downloadDirectory",
-                            "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/downloads",
-                            "remoteDirectory": "/home/spiegel/Documents/secretPlans",
-                            "fileName": "virus.txt",
-                            "username": "spiegel",
-                            "password": "1226"
-                            }
+    downloadDirectorySSHSCP =  {"ip address": "192.168.1.124",
+                                "service": "ssh",
+                                "port": 22,
+                                "action": "transferFile",
+                                "subaction":"downloadDirectory",
+                                "localDirectory": "/home/spiegel/Capstone-Project-2022/downloads",
+                                "remoteDirectory": "/home/spiegel/Documents/secretPlans",
+                                "fileName": "virus.txt",
+                                "username": "spiegel",
+                                "password": "1226"
+                                }
 
-    sftpContext = {"ip address": "192.168.1.124",
+    sftpContext =  {"ip address": "192.168.1.124",
                     "service": "sftp",
                     "port": 22,
                     "action": "transferFile",
                     "subaction":"uploadFile",
-                    "localDirectory": "/home/spiegel/Capstone-Project-2022/scenarios/downloads",
+                    "localDirectory": "/home/spiegel/Capstone-Project-2022/downloads",
                     "remoteDirectory": "/home/spiegel/flags",
                     "file": "user.txt",
                     "username": "spiegel",
                     "password": "1226"
                     }
+
+    replicate =    {"ip address": "192.168.1.124",
+                    "service": "ssh",
+                    "port": 22,
+                    "action": "transferFile",
+                    "subaction":"uploadDirectory",
+                    "localDirectory": "/home/spiegel/Capstone-Project-2022/src",
+                    "remoteDirectory": "/home/spiegel",
+                    "fileName": "virus.txt",
+                    "username": "spiegel",
+                    "password": "1226"
+                    }
+
+
     print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", downloadDirectorySSHSCP, Tree)
     AgentBob.hostIP()

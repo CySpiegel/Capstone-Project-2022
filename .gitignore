@@ -5,3 +5,4 @@ src/client/__pycache__/
 *.pyc
 /venv-capstone/
 /downloads/
+/binaries/
