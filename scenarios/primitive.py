@@ -103,7 +103,10 @@ def scpTransferFile(self, input_nodes, context):
 		scp.get(remoteDirectory, local_path=downloadDir, recursive=True)
 
 	if subaction == 'uploadFile':
-		scp.get(fileName)
+		scp.put(fileName)
+
+	if subaction == "uploadDirectory":
+		scp.put(remoteDirectory, local_path=downloadDir, recursive=True)
 
 	print('Chose SCP File Transfer through SSH Connection')
 

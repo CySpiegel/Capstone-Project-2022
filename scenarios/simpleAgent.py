@@ -28,6 +28,7 @@ class SimpleAgent:
         self.Tree = GeneticTree(ATTACKER, SERVICE)
         self.Tree.initialize(3, full=True)
 
+    # Returns the IP of what this agent is running on
     def hostIP(self):
         hostIP = self.context['localIP']
         return hostIP

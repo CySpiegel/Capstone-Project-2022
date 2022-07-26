@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     # print("\n\nAgent Smith on the job")
 
-    # context['service'] = 'sftp'
-    # AgentSmith = SimpleAgent("Smith", context)
-    # AgentSmith.randomTree()
-    # AgentSmith.run()
+    context['service'] = 'sftp'
+    AgentSmith = SimpleAgent("Smith", context)
+    AgentSmith.randomTree()
+    AgentSmith.run()
