@@ -193,6 +193,9 @@ def transferFiles(self, input_nodes, context):
 	print(source)
 	destination = buildFilePath(localDirectory, fileName)
 	print(destination)
+
+	#source = "flags/user1.txt"
+	#destination = "downloads/sftp/user1.txt"
 	sftp.get(source, destination)
 	sftp.close()
 	print('Chose SFTP File Transfer', ip_address)

@@ -82,7 +82,7 @@ if __name__ == "__main__":
                     "port": 22,
                     "action": "transferFile",
                     "subaction":"downloadFile",
-                    "localDirectory": "sftp",
+                    "localDirectory": "downloads/sftp",
                     "remoteDirectory": "flags",
                     "file": "user1.txt",
                     "username": "spiegel",
