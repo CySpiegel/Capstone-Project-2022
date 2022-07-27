@@ -150,7 +150,7 @@ def sftp(self, input_nodes, context):
 
 	inform = context['inform']
 	if inform == "unknown":
-		return "sftp"
+		return SFTP
 
 	# getting SSH parameters from context
 	port = context['port']
@@ -266,7 +266,7 @@ def scanNetworkServices(self, input_nodes, context):
 	nmap = nmap3.Nmap()
 	results = {}
 	results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
-	targets = parseNmapResults(results)
+	targets = parseNmapNetworkServices(results)
 
 	context["scannetworkservices"] = targets
 	print("Targets Found")

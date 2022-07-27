@@ -2,7 +2,7 @@ import os
 import nmap3
 
 
-def parseNmapResults(results):
+def parseNmapNetworkServices(results):
     results.pop("stats")
     results.pop("runtime")
     listOfIPAddr = []
@@ -25,6 +25,27 @@ def parseNmapResults(results):
 
     return targetList
 
+
+def parseNmapOSScan(results):
+    results.pop("stats")
+    results.pop("runtime")
+    listOfIPAddr = []
+    for key, value in results.items():
+        listOfIPAddr.append(key)
+
+
+    # Build Target List by IP address and information
+    targetList = {}
+    for IPAddress in listOfIPAddr:
+        targetList[IPAddress] = {}
+        for targetPorts in results[IPAddress]["ports"]:
+            portName = targetPorts["service"]["name"]
+            portNumber = targetPorts["portid"]
+            portState = targetPorts["state"]
+            portInfo = {"name": portName, "portid": portNumber, "state": portState}
+            currentDict = targetList[IPAddress]
+            currentDict[portName] = portInfo
+            targetList[IPAddress] = currentDict
 
 if __name__ == "__main__":
     nmap = nmap3.Nmap()

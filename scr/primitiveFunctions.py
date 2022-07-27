@@ -37,7 +37,7 @@ def extract_ip():
         st.close()
     return IP
 
-def parseNmapResults(results):
+def parseNmapNetworkServices(results):
     results.pop("stats")
     results.pop("runtime")
     listOfIPAddr = []
