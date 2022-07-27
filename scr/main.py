@@ -113,7 +113,17 @@ if __name__ == "__main__":
                     "password": "1226"
                     }
 
-
+    reconContext =  {"ip address": "192.168.1.124",
+                        "recon": "nmap",
+                        "port": 22,
+                        "action": "transferFile",
+                        "subaction":"uploadFile",
+                        "localDirectory": "downloads/sftp",
+                        "remoteDirectory": "flags",
+                        "file": "testing.txt",
+                        "username": "spiegel",
+                        "password": "1226"
+                        }
     print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", sftpUploadFile, Tree)
     AgentBob.hostIP()

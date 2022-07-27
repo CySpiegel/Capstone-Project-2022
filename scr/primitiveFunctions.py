@@ -1,4 +1,5 @@
 import socket
+import nmap3
 
 #return a dictionary of actions available
 def dictActions(input_nodes, context):
@@ -36,9 +37,33 @@ def extract_ip():
         st.close()
     return IP
 
+def parseNmapResults(results):
+    results.pop("stats")
+    results.pop("runtime")
+    listOfIPAddr = []
+    for key, value in results.items():
+        listOfIPAddr.append(key)
+
+
+    # Build Target List by IP address and information
+    targetList = {}
+    for IPAddress in listOfIPAddr:
+        targetList[IPAddress] = {}
+        for targetPorts in results[IPAddress]["ports"]:
+            portName = targetPorts["service"]["name"]
+            portNumber = targetPorts["portid"]
+            portState = targetPorts["state"]
+            portInfo = {"name": portName, "portid": portNumber, "state": portState}
+            currentDict = targetList[IPAddress]
+            currentDict[portName] = portInfo
+            targetList[IPAddress] = currentDict
+
+    return targetList
+
 def throwError(error):
     errorTable = {}
     errorTable[1] = "The current action from context is not found in the dictionary of actions provided.\nPlease check that leaf nodes are being generatted correctly. Most common issue is the leaf was not generated." 
     
     print(errorTable[error])
     return errorTable[error]
+

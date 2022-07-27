@@ -5,6 +5,7 @@ from protocol_ssh import *
 from ftplib import FTP
 from scp import SCPClient
 import scp
+import nmap3
 
 import random
 import socket 
@@ -27,7 +28,7 @@ SFTPACTIONS = 'sftpactions'
 
 # RECON
 RECON = 'recon'
-RECONACTIONS = 'reconactions'
+SCANNETWORK = 'scannetwork'
 
 
 
@@ -230,12 +231,12 @@ def transferFiles(self, input_nodes, context):
 #									Recon Declerations								 #
 ######################################################################################
 # Root SFTP Node to create SFTP Object 
-@GeneticTree.declarePrimitive(ATTACKER, RECON, (RECONACTIONS, RECONACTIONS))
+@GeneticTree.declarePrimitive(ATTACKER, RECON, (SCANNETWORK, SCANNETWORK))
 def ReplicateAgent(self, input_nodes, context):
 	action = context['action']		# what action is stored in context
 	inform = context['inform']
 	if inform == "unknown":
-		return "recon"
+		return "nmap"
 
 	# Actions available definer
 	actions = {}
@@ -243,13 +244,18 @@ def ReplicateAgent(self, input_nodes, context):
 	return performAction(actions, action, context)
 
 # SFTP File Transfer
-@GeneticTree.declarePrimitive(ATTACKER, RECONACTIONS, ())
-def mapNetwork(self, input_nodes, context):
+@GeneticTree.declarePrimitive(ATTACKER, SCANNETWORK, ())
+def scannetwork(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
-		return "mapNetwork"
+		return "scannetwork"
 
+	nmap = nmap3.Nmap()
+	results = {}
+	results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
+	targets = parseNmapResults(results)
 
+	context["scannetwork"] = targets
 	ip_address = context['ip address'] 	# we assume the provided context
 										# parameter is a Dict with 'ip address'
-	print('Mapping Network', ip_address)
+	print('Scan Nnetwork', ip_address)
