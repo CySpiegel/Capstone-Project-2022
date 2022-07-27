@@ -28,7 +28,9 @@ SFTPACTIONS = 'sftpactions'
 
 # RECON
 RECON = 'recon'
-SCANNETWORK = 'scannetwork'
+
+NMAP = "nmap"
+SCANNETWORK = 'scannetworkservices'
 
 
 
@@ -40,8 +42,7 @@ SCANNETWORK = 'scannetwork'
 # This is the root primitive of the Services node. 
 @GeneticTree.declarePrimitive(ATTACKER, SERVICE, (SFTP, SSH))
 def hard_coded_range_if(self, input_nodes, context):
-	ip_address = context['ip address'] 	# we assume the provided context
-	service = context['service']		# parameter is a Dict with 'ip address'
+	service = context['service']
 
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -231,12 +232,23 @@ def transferFiles(self, input_nodes, context):
 #									Recon Declerations								 #
 ######################################################################################
 # Root SFTP Node to create SFTP Object 
-@GeneticTree.declarePrimitive(ATTACKER, RECON, (SCANNETWORK, SCANNETWORK))
+@GeneticTree.declarePrimitive(ATTACKER, RECON, (NMAP, ))
+def hard_coded_range_if(self, input_nodes, context):
+	service = context['recon']
+	
+	# Perform action from services context
+	# this will allow for expansion of child nodes for more services
+	services = {}
+	services = dictActions(input_nodes, context)
+	return performAction(services, service, context)
+
+
+@GeneticTree.declarePrimitive(ATTACKER, NMAP, (SCANNETWORK, SCANNETWORK))
 def ReplicateAgent(self, input_nodes, context):
 	action = context['action']		# what action is stored in context
 	inform = context['inform']
 	if inform == "unknown":
-		return "nmap"
+		return NMAP
 
 	# Actions available definer
 	actions = {}
@@ -245,17 +257,19 @@ def ReplicateAgent(self, input_nodes, context):
 
 # SFTP File Transfer
 @GeneticTree.declarePrimitive(ATTACKER, SCANNETWORK, ())
-def scannetwork(self, input_nodes, context):
+def scanNetworkServices(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
-		return "scannetwork"
+		return SCANNETWORK
 
 	nmap = nmap3.Nmap()
 	results = {}
 	results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
 	targets = parseNmapResults(results)
 
-	context["scannetwork"] = targets
-	ip_address = context['ip address'] 	# we assume the provided context
-										# parameter is a Dict with 'ip address'
-	print('Scan Nnetwork', ip_address)
+	context["scannetworkservices"] = targets
+	print("Targets Found")
+	for key, value in targets.items():
+		print("Address: ", key)
+	
+	print('Scan Nnetwork Services')

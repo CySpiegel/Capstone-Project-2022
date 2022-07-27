@@ -24,10 +24,7 @@ if __name__ == "__main__":
     # context = {'ip address': '192.168.1.200', 'service': 'ssh'}
     # manualTree.execute(context)
 
-    # Randomly Grow tree to a depth of 3 if possible
-    Tree = GeneticTree(ATTACKER, SERVICE)
-    Tree.initialize(4, full=True)
-    Tree.printTree()
+
 
     downloadFileSSH =  {"ip address": "192.168.1.124",
                         "service": "ssh",
@@ -113,19 +110,25 @@ if __name__ == "__main__":
                     "password": "1226"
                     }
 
-    reconContext =  {"ip address": "192.168.1.124",
-                        "recon": "nmap",
-                        "port": 22,
-                        "action": "transferFile",
-                        "subaction":"uploadFile",
-                        "localDirectory": "downloads/sftp",
-                        "remoteDirectory": "flags",
-                        "file": "testing.txt",
-                        "username": "spiegel",
-                        "password": "1226"
-                        }
+    reconContext =  {"inform": "",
+                    "ip address": "192.168.1.124",
+                    "recon": "nmap",
+                    "port": 22,
+                    "action": "scannetworkservices",
+                    "subaction":"",
+                    "localDirectory": "downloads/sftp",
+                    "remoteDirectory": "flags",
+                    "file": "testing.txt",
+                    "username": "spiegel",
+                    "password": "1226"
+                    }
+
+    # Randomly Grow tree to a depth of 3 if possible
+    Tree = GeneticTree(ATTACKER, RECON)
+    Tree.initialize(3, full=True)
+    Tree.printTree()
     print("\n\nAgent Bob on the job")
-    AgentBob = SimpleAgent("BoB", sftpUploadFile, Tree)
+    AgentBob = SimpleAgent("BoB", reconContext, Tree)
     AgentBob.hostIP()
     AgentBob.run()
 
