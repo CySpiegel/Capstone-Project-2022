@@ -130,7 +130,7 @@ if __name__ == "__main__":
 
     # Instantiate Agent
     print("\n\nAgent Bob on the job")
-    AgentBob = SimpleAgent("BoB", reconContext, Tree)
+    AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
     AgentBob.hostIP()
     AgentBob.run()
 

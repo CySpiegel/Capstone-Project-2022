@@ -21,7 +21,9 @@ def parseNmapNetworkServices(results):
             portInfo = {"name": portName, "portid": portNumber, "state": portState}
             currentDict = targetList[IPAddress]
             currentDict[portName] = portInfo
-            targetList[IPAddress] = currentDict
+        servicesDict = {}
+        servicesDict["services"] =  currentDict
+        targetList[IPAddress] = servicesDict
 
     return targetList
 
@@ -45,17 +47,19 @@ def parseNmapOSScan(results):
             portInfo = {"name": portName, "portid": portNumber, "state": portState}
             currentDict = targetList[IPAddress]
             currentDict[portName] = portInfo
-            targetList[IPAddress] = currentDict
+        servicesDict = {}
+        servicesDict["services"] =  currentDict
+        targetList[IPAddress] = servicesDict
 
 if __name__ == "__main__":
     nmap = nmap3.Nmap()
     results = {}
-    #results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
-    #targets = parseNmapResults(results)
-    os_results = nmap.nmap_os_detection("192.168.1.124")
+    results = nmap.scan_top_ports("192.168.1.124", args="-sV")
+    targets = parseNmapNetworkServices(results)
+    #os_results = nmap.nmap_os_detection("192.168.1.124")
 
 
 
-    for key, value in os_results.items():
+    for key, value in targets.items():
         print("ip address: ", key)
-        print(os_results[key])
+        print(value)

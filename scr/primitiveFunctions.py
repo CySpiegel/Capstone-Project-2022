@@ -56,7 +56,9 @@ def parseNmapNetworkServices(results):
             portInfo = {"name": portName, "portid": portNumber, "state": portState}
             currentDict = targetList[IPAddress]
             currentDict[portName] = portInfo
-            targetList[IPAddress] = currentDict
+        servicesDict = {}
+        servicesDict["services"] =  currentDict
+        targetList[IPAddress] = servicesDict
 
     return targetList
 
