@@ -1,3 +1,4 @@
+import os
 import nmap3
 
 
@@ -28,9 +29,12 @@ def parseNmapResults(results):
 if __name__ == "__main__":
     nmap = nmap3.Nmap()
     results = {}
-    results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
-    targets = parseNmapResults(results)
+    #results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
+    #targets = parseNmapResults(results)
+    os_results = nmap.nmap_os_detection("192.168.1.124")
 
 
-    for key, value in targets.items():
-        print(key, value)
+
+    for key, value in os_results.items():
+        print("ip address: ", key)
+        print(os_results[key])

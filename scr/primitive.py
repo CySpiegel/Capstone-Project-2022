@@ -30,7 +30,8 @@ SFTPACTIONS = 'sftpactions'
 RECON = 'recon'
 
 NMAP = "nmap"
-SCANNETWORK = 'scannetworkservices'
+SCANNETWORKSERVICES = 'scannetworkservices'
+SCANNETWORKOPERATINGSYSTEMS = "scannetworkoperatingsystems"
 
 
 
@@ -243,7 +244,7 @@ def hard_coded_range_if(self, input_nodes, context):
 	return performAction(services, service, context)
 
 
-@GeneticTree.declarePrimitive(ATTACKER, NMAP, (SCANNETWORK, SCANNETWORK))
+@GeneticTree.declarePrimitive(ATTACKER, NMAP, (SCANNETWORKSERVICES, SCANNETWORKSERVICES))
 def ReplicateAgent(self, input_nodes, context):
 	action = context['action']		# what action is stored in context
 	inform = context['inform']
@@ -255,12 +256,12 @@ def ReplicateAgent(self, input_nodes, context):
 	actions = dictActions(input_nodes, context)
 	return performAction(actions, action, context)
 
-# SFTP File Transfer
-@GeneticTree.declarePrimitive(ATTACKER, SCANNETWORK, ())
+# SNetwork Wide Services scan
+@GeneticTree.declarePrimitive(ATTACKER, SCANNETWORKSERVICES, ())
 def scanNetworkServices(self, input_nodes, context):
 	inform = context['inform']
 	if inform == "unknown":
-		return SCANNETWORK
+		return SCANNETWORKSERVICES
 
 	nmap = nmap3.Nmap()
 	results = {}
@@ -271,5 +272,30 @@ def scanNetworkServices(self, input_nodes, context):
 	print("Targets Found")
 	for key, value in targets.items():
 		print("Address: ", key)
+		print("Service: ", value['ssh'])
 	
 	print('Scan Nnetwork Services')
+	return context
+
+# OS Detection Scan
+# IMPORTANT AGENT MUST BE RUN AS ROOT/SUPER USER/SUDO TO FUNCTION
+@GeneticTree.declarePrimitive(ATTACKER, SCANNETWORKOPERATINGSYSTEMS, ())
+def scanNetworkServices(self, input_nodes, context):
+	inform = context['inform']
+	if inform == "unknown":
+		return SCANNETWORKOPERATINGSYSTEMS
+
+	nmap = nmap3.Nmap()
+	results = {}
+	results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
+	targets = parseNmapResults(results)
+
+	context["scannetworkservices"] = targets
+	print("Targets Found")
+	for key, value in targets.items():
+		print("Address: ", key)
+		print("Service: ", value['ssh'])
+	
+	print('Scan Nnetwork Services')
+	return context
+	

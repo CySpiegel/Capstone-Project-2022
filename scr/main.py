@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
 
     downloadFileSSH =  {"ip address": "192.168.1.124",
-                        "service": "ssh",
+                        "service": SSH,
                         "port": 22,
                         "action": "transferFile",
                         "subaction":"downloadFile",
@@ -39,7 +39,7 @@ if __name__ == "__main__":
                         }
 
     uloadFileSSH = {"ip address": "192.168.1.124",
-                    "service": "ssh",
+                    "service": SSH,
                     "port": 22,
                     "action": "transferFile",
                     "subaction":"uploadFile",
@@ -51,7 +51,7 @@ if __name__ == "__main__":
                     }
 
     uploadDirectorySSHSCP = {"ip address": "192.168.1.124",
-                            "service": "ssh",
+                            "service": SSH,
                             "port": 22,
                             "action": "transferFile",
                             "subaction":"uploadDirectory",
@@ -63,7 +63,7 @@ if __name__ == "__main__":
                             }
 
     downloadDirectorySSHSCP =  {"ip address": "192.168.1.124",
-                                "service": "ssh",
+                                "service": SSH,
                                 "port": 22,
                                 "action": "transferFile",
                                 "subaction":"downloadDirectory",
@@ -75,7 +75,7 @@ if __name__ == "__main__":
                                 }
     # See the geneticTree sftp primitive on how to use SFTP
     sftpDownloadFile =  {"ip address": "192.168.1.124",
-                        "service": "sftp",
+                        "service": SFTP,
                         "port": 22,
                         "action": "transferFile",
                         "subaction":"downloadFile",
@@ -87,7 +87,7 @@ if __name__ == "__main__":
                         }
 
     sftpUploadFile =  {"ip address": "192.168.1.124",
-                        "service": "sftp",
+                        "service": SFTP,
                         "port": 22,
                         "action": "transferFile",
                         "subaction":"uploadFile",
@@ -112,7 +112,7 @@ if __name__ == "__main__":
 
     reconContext =  {"inform": "",
                     "ip address": "192.168.1.124",
-                    "recon": "nmap",
+                    "recon": NMAP,
                     "port": 22,
                     "action": "scannetworkservices",
                     "subaction":"",
@@ -127,6 +127,8 @@ if __name__ == "__main__":
     Tree = GeneticTree(ATTACKER, RECON)
     Tree.initialize(3, full=True)
     Tree.printTree()
+
+    # Instantiate Agent
     print("\n\nAgent Bob on the job")
     AgentBob = SimpleAgent("BoB", reconContext, Tree)
     AgentBob.hostIP()
