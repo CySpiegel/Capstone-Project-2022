@@ -21,6 +21,7 @@ SERVICE = 'service'
 # SSH
 SSH = 'ssh'
 SSHACTIONS = 'sshactions'
+SSHACTIONDTRANSFERFILE = "sshactionstransferfile"
 
 # SFTP
 SFTP ='sftp'
@@ -130,9 +131,9 @@ def scpTransferFile(self, input_nodes, context):
 
 
 # Replicate and launch agent on remote system
-@GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
-def replicateAgent(self, input_nodes, context):
-	pass
+# @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
+# def replicateAgent(self, input_nodes, context):
+# 	pass
 
 
 
@@ -263,6 +264,7 @@ def scanNetworkServices(self, input_nodes, context):
 	if inform == "unknown":
 		return SCANNETWORKSERVICES
 
+	print("Scanning Network")
 	ipRange = context["ipRange"]
 	nmap = nmap3.Nmap()
 	results = {}

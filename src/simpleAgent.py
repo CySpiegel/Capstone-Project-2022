@@ -102,7 +102,15 @@ class SimpleAgent:
         return storedVaule
 
     def attackTargets(self, targetList):
-        pass
+        for target in targetList:
+            self.updateContext("ip address", target)
+            self.run()
+
+    def generateTree(self, side, treeType, depth):
+        # Create Recon Tree
+        Tree = GeneticTree(side, treeType)
+        Tree.initialize(depth, full=True)
+        self.Tree = Tree
 
     def smithWasHere():
         pass

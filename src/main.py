@@ -126,7 +126,7 @@ if __name__ == "__main__":
                     }
 
     # Randomly Grow tree to a depth of 3 if possible
-    Tree = GeneticTree(ATTACKER, RECON)
+    Tree = GeneticTree(ATTACKER, SERVICE)
     Tree.initialize(3, full=True)
 
     # Agent Bob
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     AgentBob.run()
     
     
-    
+
     # Agent Anderson
     # Main goal: Find a target without knowing the IP address and download the flag
     print("\n\nAgent Anderson")
@@ -151,9 +151,13 @@ if __name__ == "__main__":
     print("Targets with Service: ", possibleTargets)
     # Loginto SSH services and stetal the flags from a known location
     AgentAnderson.replaceContext(downloadFileSSH)
+    AgentAnderson.generateTree(ATTACKER, SERVICE, 4)
     AgentAnderson.attackTargets(possibleTargets)
 
-    # Agent Anderson
+
+
+
+    # Agent Smith
     # Main goal: Fing Targets with open SSH services and upload itself to the remote system
     print("\n\nAgent Smith")
     AgentSmith = SimpleAgent("Anderson", reconContext)
