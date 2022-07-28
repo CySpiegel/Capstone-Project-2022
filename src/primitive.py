@@ -264,13 +264,12 @@ def scanNetworkServices(self, input_nodes, context):
 		return SCANNETWORKSERVICES
 
 	ipRange = context["ipRange"]
-	print("Nmap Range:", ipRange)
 	nmap = nmap3.Nmap()
 	results = {}
 	results = nmap.scan_top_ports(ipRange, args="-sV")
 	targets = parseNmapNetworkServices(results)
 	context[SCANNETWORKSERVICES] = targets
-	print('Scan Nnetwork Services')
+	print('Scan Network Services')
 	return context
 
 

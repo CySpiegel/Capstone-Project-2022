@@ -70,6 +70,7 @@ def throwError(error):
     errorTable = {}
     errorTable[1] = "The current action from context is not found in the dictionary of actions provided.\nPlease check that leaf nodes are being generatted correctly. Most common issue is the leaf was not generated." 
     errorTable[2] = "scannetworkservices is missing from context. did you run the recon tree leaf scannetworkservices?"
+    errorTable[3] = "key not in context"
     
     print(errorTable[error])
     return errorTable[error]

@@ -54,7 +54,7 @@ class SimpleAgent:
         hostIP = self.context['localIP']
         return hostIP
 
-    def filterSSHTargets(self):
+    def filterForService(self, service):
         if SCANNETWORKSERVICES in self.context:
             scanResults = self.context[SCANNETWORKSERVICES]
             targetList = list()
@@ -65,12 +65,15 @@ class SimpleAgent:
             
             for adress in IPAddressList:
                 services = scanResults[adress]["services"]
-                print("Services: ", services)
-                if SSH in services:
-                    sshService = services[SSH]
-                    state = sshService["state"]
+
+                if service in services:
+                    targetedService = services[service]
+                    state = targetedService["state"]
                     if state == "open":
                         targetList.append(adress)
+            targetList.remove(self.hostIP())
+            storeAs = service + "Targets"
+            self.context[storeAs] = targetList
             return targetList
         else:
             throwError(2)
@@ -85,15 +88,22 @@ class SimpleAgent:
         self.Tree = Tree
         localIP = self.context["localIP"]
         ipRange = localIP + "/" + cidr
-        print("CIDR Range", ipRange)
         self.context["ipRange"] = ipRange
         # Running the above Recon Tree
         self.run()
-        targets = self.context[SCANNETWORKSERVICES]
-        
-        self.filterSSHTargets()
 
 
+    def getContextValue(self, key):
+        storedVaule = ""
+        if key in self.context:
+            storedVaule = self.context[key]
+        else:
+            storedVaule = throwError(3)
+        return storedVaule
+
+    def attackService(self, service):
+        serviceTargets = service + "Targets"
+        targetList = self.getContextValue(serviceTargets)
 
     def smithWasHere():
         pass

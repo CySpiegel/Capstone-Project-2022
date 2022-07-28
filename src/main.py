@@ -24,7 +24,9 @@ if __name__ == "__main__":
     # context = {'ip address': '192.168.1.200', 'service': 'ssh'}
     # manualTree.execute(context)
 
-    downloadFileSSH =  {"ip address": "192.168.1.124",
+    manualTargetIPAddress = "192.168.1.124"
+
+    downloadFileSSH =  {"ip address": manualTargetIPAddress,
                         "service": SSH,
                         "port": 22,
                         "action": "transferFile",
@@ -36,7 +38,7 @@ if __name__ == "__main__":
                         "password": "1226"
                         }
 
-    uloadFileSSH = {"ip address": "192.168.1.124",
+    uloadFileSSH = {"ip address": manualTargetIPAddress,
                     "service": SSH,
                     "port": 22,
                     "action": "transferFile",
@@ -48,7 +50,7 @@ if __name__ == "__main__":
                     "password": "1226"
                     }
 
-    uploadDirectorySSHSCP = {"ip address": "192.168.1.124",
+    uploadDirectorySSHSCP = {"ip address": manualTargetIPAddress,
                             "service": SSH,
                             "port": 22,
                             "action": "transferFile",
@@ -60,7 +62,7 @@ if __name__ == "__main__":
                             "password": "1226"
                             }
 
-    downloadDirectorySSHSCP =  {"ip address": "192.168.1.124",
+    downloadDirectorySSHSCP =  {"ip address": manualTargetIPAddress,
                                 "service": SSH,
                                 "port": 22,
                                 "action": "transferFile",
@@ -72,7 +74,7 @@ if __name__ == "__main__":
                                 "password": "1226"
                                 }
     # See the geneticTree sftp primitive on how to use SFTP
-    sftpDownloadFile =  {"ip address": "192.168.1.124",
+    sftpDownloadFile =  {"ip address": manualTargetIPAddress,
                         "service": SFTP,
                         "port": 22,
                         "action": "transferFile",
@@ -84,7 +86,7 @@ if __name__ == "__main__":
                         "password": "1226"
                         }
 
-    sftpUploadFile =  {"ip address": "192.168.1.124",
+    sftpUploadFile =  {"ip address": manualTargetIPAddress,
                         "service": SFTP,
                         "port": 22,
                         "action": "transferFile",
@@ -96,7 +98,7 @@ if __name__ == "__main__":
                         "password": "1226"
                         }
 
-    replicate =    {"ip address": "192.168.1.124",
+    replicate =    {"ip address": manualTargetIPAddress,
                     "service": "ssh",
                     "port": 22,
                     "action": "transferFile",
@@ -109,7 +111,7 @@ if __name__ == "__main__":
                     }
 
     reconContext =  {"inform": "",
-                    "ip address": "192.168.1.124",
+                    "ip address": manualTargetIPAddress,
                     "recon": NMAP,
                     "ipRange": "192.168.1.124/24",
                     "port": 22,
@@ -139,4 +141,7 @@ if __name__ == "__main__":
     # context['service'] = 'sftp'
     AgentSmith = SimpleAgent("Smith", reconContext, Tree)
     AgentSmith.recon("24")
+    possibleTargets = AgentSmith.filterForService(SSH)
+    print("Targets with Service: ", possibleTargets)
+
     #AgentSmith.run()
