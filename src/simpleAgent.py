@@ -54,21 +54,46 @@ class SimpleAgent:
         hostIP = self.context['localIP']
         return hostIP
 
-    # Will create a generic tree 
-    def standardTree(self):
-        context = {"ip address": "192.168.1.124",
-                    "service": "ssh",
-                    "port": 22,
-                    "action": "transferFile",
-                    "subaction":"uploadDirectory",
-                    "file": "user.txt",
-                    "localDir": "",
-                    "remoteDir": "/home/spiegel/flags",
-                    "downloadDir": "/home/spiegel/Capstone-Project-2022/downloads",
-                    "username": "spiegel",
-                    "password": "1226"
-                    }
-        return context
+    def filterSSHTargets(self):
+        if SCANNETWORKSERVICES in self.context:
+            scanResults = self.context[SCANNETWORKSERVICES]
+            targetList = list()
+            IPAddressList = list()
+            # Build list of IP Addresses from scan results
+            for key in scanResults:
+                IPAddressList.append(key)
+            
+            for adress in IPAddressList:
+                services = scanResults[adress]["services"]
+                print("Services: ", services)
+                if SSH in services:
+                    sshService = services[SSH]
+                    state = sshService["state"]
+                    if state == "open":
+                        targetList.append(adress)
+            return targetList
+        else:
+            throwError(2)
+            return []
+
+
+    def recon(self, cidr):
+        # Create Recon Tree
+        Tree = GeneticTree(ATTACKER, RECON)
+        Tree.initialize(3, full=True)
+        # Assign Recon Tree to Agent
+        self.Tree = Tree
+        localIP = self.context["localIP"]
+        ipRange = localIP + "/" + cidr
+        print("CIDR Range", ipRange)
+        self.context["ipRange"] = ipRange
+        # Running the above Recon Tree
+        self.run()
+        targets = self.context[SCANNETWORKSERVICES]
+        
+        self.filterSSHTargets()
+
+
+
     def smithWasHere():
         pass
-

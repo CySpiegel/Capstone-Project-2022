@@ -24,8 +24,6 @@ if __name__ == "__main__":
     # context = {'ip address': '192.168.1.200', 'service': 'ssh'}
     # manualTree.execute(context)
 
-
-
     downloadFileSSH =  {"ip address": "192.168.1.124",
                         "service": SSH,
                         "port": 22,
@@ -113,8 +111,9 @@ if __name__ == "__main__":
     reconContext =  {"inform": "",
                     "ip address": "192.168.1.124",
                     "recon": NMAP,
+                    "ipRange": "192.168.1.124/24",
                     "port": 22,
-                    "action": "scannetworkservices",
+                    "action": SCANNETWORKSERVICES,
                     "subaction":"",
                     "localDirectory": "downloads/sftp",
                     "remoteDirectory": "flags",
@@ -126,19 +125,18 @@ if __name__ == "__main__":
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, RECON)
     Tree.initialize(3, full=True)
-    Tree.printTree()
 
     # Instantiate Agent
-    print("\n\nAgent Bob on the job")
-    AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
-    AgentBob.hostIP()
-    AgentBob.run()
+    # print("\n\nAgent Bob on the job")
+    # AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
+    # AgentBob.hostIP()
+    # AgentBob.run()
 
     print("\n\nAgent Smith on the job")
 
     # Agent Smith
     # Main goal: Replicate itself across the
     # context['service'] = 'sftp'
-    # AgentSmith = SimpleAgent("Smith")
-    # AgentSmith.randomTree()
-    # AgentSmith.run()
+    AgentSmith = SimpleAgent("Smith", reconContext, Tree)
+    AgentSmith.recon("24")
+    #AgentSmith.run()

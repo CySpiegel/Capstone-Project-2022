@@ -44,7 +44,7 @@ SCANNETWORKOPERATINGSYSTEMS = "scannetworkoperatingsystems"
 @GeneticTree.declarePrimitive(ATTACKER, SERVICE, (SFTP, SSH))
 def hard_coded_range_if(self, input_nodes, context):
 	service = context['service']
-	
+
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
 	services = {}
@@ -245,7 +245,7 @@ def hard_coded_range_if(self, input_nodes, context):
 
 
 @GeneticTree.declarePrimitive(ATTACKER, NMAP, (SCANNETWORKSERVICES, SCANNETWORKSERVICES))
-def ReplicateAgent(self, input_nodes, context):
+def nmapscan(self, input_nodes, context):
 	action = context['action']		# what action is stored in context
 	inform = context['inform']
 	if inform == "unknown":
@@ -263,39 +263,15 @@ def scanNetworkServices(self, input_nodes, context):
 	if inform == "unknown":
 		return SCANNETWORKSERVICES
 
+	ipRange = context["ipRange"]
+	print("Nmap Range:", ipRange)
 	nmap = nmap3.Nmap()
 	results = {}
-	results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
+	results = nmap.scan_top_ports(ipRange, args="-sV")
 	targets = parseNmapNetworkServices(results)
-
-	context["scannetworkservices"] = targets
-	print("Targets Found")
-	for key, value in targets.items():
-		print("Address: ", key)
-		print("Service: ", value['ssh'])
-	
+	context[SCANNETWORKSERVICES] = targets
 	print('Scan Nnetwork Services')
 	return context
 
-# OS Detection Scan
-# IMPORTANT AGENT MUST BE RUN AS ROOT/SUPER USER/SUDO TO FUNCTION
-@GeneticTree.declarePrimitive(ATTACKER, SCANNETWORKOPERATINGSYSTEMS, ())
-def scanNetworkServices(self, input_nodes, context):
-	inform = context['inform']
-	if inform == "unknown":
-		return SCANNETWORKOPERATINGSYSTEMS
 
-	nmap = nmap3.Nmap()
-	results = {}
-	results = nmap.scan_top_ports("192.168.1.124/24", args="-sV")
-	targets = parseNmapNetworkServices(results)
 
-	context["scannetworkservices"] = targets
-	print("Targets Found")
-	for key, value in targets.items():
-		print("Address: ", key)
-		print("Service: ", value['ssh'])
-	
-	print('Scan Nnetwork Services')
-	return context
-	
