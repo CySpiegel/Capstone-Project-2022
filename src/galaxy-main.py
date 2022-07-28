@@ -117,7 +117,7 @@ if __name__ == "__main__":
                     "port": 22,
                     "action": "transferFile",
                     "subaction":"uploadDirectory",
-                    "localDirectory": "/home/spiegel/Capstone-Project-2022/src",
+                    "localDirectory": "/Capstone-Project-2022/src",
                     "remoteDirectory": "/home/spiegel",
                     "fileName": "virus.txt",
                     "username": user,
