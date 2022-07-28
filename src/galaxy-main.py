@@ -143,12 +143,13 @@ if __name__ == "__main__":
                             "port": 22,
                             "action": "transferFile",
                             "subaction":"uploadDirectory",
-                            "localDirectory": "/home/spiegel/Capstone-Project-2022/src",
-                            "remoteDirectory": "/home/spiegel",
-                            "fileName": "virus.txt",
+                            "localDirectory": "/Capstone-Project-2022/src",
+                            "remoteDirectory": remoteUploadDir,
+                            "fileName": "",
                             "username": user,
                             "password": passwd
                             }
+    
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, SERVICE)
     Tree.initialize(3, full=True)
@@ -158,7 +159,7 @@ if __name__ == "__main__":
     # you must provide a context and a Tree or bob
     # will not know what to do
     print("\n\nAgent Bob")
-    AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
+    AgentBob = SimpleAgent("BoB", downloadFlagSSH, Tree)
     AgentBob.run()
     
     
@@ -174,7 +175,7 @@ if __name__ == "__main__":
     possibleTargets = AgentAnderson.filterForService(SSH)
     print("Targets with Service: ", possibleTargets)
     # Loginto SSH services and stetal the flags from a known location
-    AgentAnderson.replaceContext(downloadFileSSH)
+    AgentAnderson.replaceContext(downloadFlagSSH)
     AgentAnderson.generateTree(ATTACKER, SERVICE, 4)
     AgentAnderson.attackTargets(possibleTargets)
 
