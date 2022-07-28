@@ -26,6 +26,7 @@ if __name__ == "__main__":
 
     manualTargetIPAddress = "192.168.1.124"
 
+    # Defined Context for testing leaf actions
     downloadFileSSH =  {"ip address": manualTargetIPAddress,
                         "service": SSH,
                         "port": 22,
@@ -128,20 +129,39 @@ if __name__ == "__main__":
     Tree = GeneticTree(ATTACKER, RECON)
     Tree.initialize(3, full=True)
 
-    # Instantiate Agent
-    # print("\n\nAgent Bob on the job")
-    # AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
-    # AgentBob.hostIP()
-    # AgentBob.run()
-
-    print("\n\nAgent Smith on the job")
-
-    # Agent Smith
-    # Main goal: Replicate itself across the
-    # context['service'] = 'sftp'
-    AgentSmith = SimpleAgent("Smith", reconContext, Tree)
-    AgentSmith.recon("24")
-    possibleTargets = AgentSmith.filterForService(SSH)
+    # Agent Bob
+    # Bob is well Bob and requires a lot of help
+    # you must provide a context and a Tree or bob
+    # will not know what to do
+    print("\n\nAgent Bob")
+    AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
+    AgentBob.run()
+    
+    
+    
+    # Agent Anderson
+    # Main goal: Find a target without knowing the IP address and download the flag
+    print("\n\nAgent Anderson")
+    # Provide the context for what you want Agent Anderson to do
+    # We provide the recon context
+    AgentAnderson = SimpleAgent("Anderson", reconContext)
+    # Must recon the network
+    AgentAnderson.recon("24")
+    possibleTargets = AgentAnderson.filterForService(SSH)
     print("Targets with Service: ", possibleTargets)
+    # Loginto SSH services and stetal the flags from a known location
+    AgentAnderson.replaceContext(downloadFileSSH)
+    AgentAnderson.attackTargets(possibleTargets)
 
-    #AgentSmith.run()
+    # Agent Anderson
+    # Main goal: Fing Targets with open SSH services and upload itself to the remote system
+    print("\n\nAgent Smith")
+    AgentSmith = SimpleAgent("Anderson", reconContext)
+    # We provide the range to scan on the network
+    AgentSmith.recon("24")
+
+    # Get a list of computers running SSH services and are available
+    possibleTargets = AgentSmith.filterForService(SSH)
+
+
+

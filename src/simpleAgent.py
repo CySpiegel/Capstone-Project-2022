@@ -101,9 +101,8 @@ class SimpleAgent:
             storedVaule = throwError(3)
         return storedVaule
 
-    def attackService(self, service):
-        serviceTargets = service + "Targets"
-        targetList = self.getContextValue(serviceTargets)
+    def attackTargets(self, targetList):
+        pass
 
     def smithWasHere():
         pass
