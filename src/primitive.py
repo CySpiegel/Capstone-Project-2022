@@ -12,8 +12,23 @@ import socket
 import os.path
 import time
 
+# Needed Information for Agents to function
+USERNAME = "spiegel"
+PASSWD = "1226"
+REMOTEDIR = "/home/spiegel"
+LOCALDIR = "/home/spiegel/Capstone-Project-2022/src"
+
+
+# Actions
+TRANSFREFILE = "transferFile"
+SUBACTION = "downloadFile"
+FILENAME = "user.txt"
+
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
+
+# Decision Tree Declerations
+BOB = "bob"
 
 # defining data types of primitives as constant strings
 SERVICE = 'service'
@@ -36,6 +51,36 @@ SCANNETWORKOPERATINGSYSTEMS = "scannetworkoperatingsystems"
 
 
 
+######################################################################################
+#									Decesion Tree Declerations						 #
+######################################################################################
+@GeneticTree.declarePrimitive(ATTACKER, BOB, (RECON, SERVICE))
+def hard_coded_range_if(self, input_nodes, context):
+	print("Bob is building context")
+	context["username"] = USERNAME
+	context["password"] = PASSWD
+	context["localDirectory"] = LOCALDIR
+	context["remoteDirectory"] = REMOTEDIR
+
+	# Set initial recon
+	context['service'] = RECON
+	service = context['service'] 
+
+
+	# Perform action from services context
+	# this will allow for expansion of child nodes for more services
+	services = {}
+	services = dictActions(input_nodes, context)
+	exit(1)
+	return performAction(services, service, context)
+
+
+
+
+
+
+
+
 
 ######################################################################################
 #									SERVICE Declerations							 #
@@ -45,6 +90,8 @@ SCANNETWORKOPERATINGSYSTEMS = "scannetworkoperatingsystems"
 @GeneticTree.declarePrimitive(ATTACKER, SERVICE, (SFTP, SSH))
 def hard_coded_range_if(self, input_nodes, context):
 	service = context['service']
+
+	
 
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -236,6 +283,11 @@ def transferFiles(self, input_nodes, context):
 # Root SFTP Node to create SFTP Object 
 @GeneticTree.declarePrimitive(ATTACKER, RECON, (NMAP, ))
 def hard_coded_range_if(self, input_nodes, context):
+		# Informant clause to inform parrent node on what this node is
+	inform = context['inform']
+	if inform == "unknown":
+		return RECON
+	
 	service = context['recon']
 	
 	# Perform action from services context

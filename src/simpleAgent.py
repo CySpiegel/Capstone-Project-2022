@@ -7,9 +7,9 @@ import os
 
 
 class SimpleAgent:
-    def __init__(self, name, context = 0, decisionTree = 0):
+    def __init__(self, name, context, species, rootNode):
         self.name = name
-        self.Tree = decisionTree
+        self.Tree = self.buildTree(species, rootNode)
         self.context = context
         self.context["localIP"] = extract_ip()
 
@@ -20,6 +20,10 @@ class SimpleAgent:
     # the tree currently stored
     def actionsToTake(self, context):
         self.Tree.execute(context)
+
+    def buildTree(self, species, rootNode):
+        Tree = GeneticTree(species, rootNode)
+        Tree.initialize(4, full=True)
 
     # Exucutes the currently stored context the 
     # agent has available on the current tree
