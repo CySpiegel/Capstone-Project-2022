@@ -40,13 +40,13 @@ def extract_ip():
         st.close()
     return IP
 
+# Only used in leaf node
 def parseNmapNetworkServices(results):
     results.pop("stats")
     results.pop("runtime")
     listOfIPAddr = []
     for key, value in results.items():
         listOfIPAddr.append(key)
-
 
     # Build Target List by IP address and information
     targetList = {}
@@ -60,6 +60,7 @@ def parseNmapNetworkServices(results):
             currentDict = targetList[IPAddress]
             currentDict[portName] = portInfo
         servicesDict = {}
+        servicesDict['hostname'] = results[IPAddress]["hostname"][0]["name"]
         servicesDict["services"] =  currentDict
         targetList[IPAddress] = servicesDict
 
@@ -74,7 +75,7 @@ def getCIDRrange(context, range):
 def filterForService(context, service):
     if SCANNETWORKSERVICES in context:
         scanResults = context[SCANNETWORKSERVICES]
-        targetList = list()
+        targetList = {}
         IPAddressList = list()
         # Build list of IP Addresses from scan results
         for key in scanResults:
@@ -90,13 +91,40 @@ def filterForService(context, service):
                 state = targetedService["state"]
                 if state == "open":
                     portid = targetedService["portid"]
-                    targetList.append([address, portid])
+                    targetList[address] = portid
         storeAs = service + "Targets"
         context[storeAs] = targetList
         return targetList
     else:
         throwError(2)
         return []
+
+def dictToList(dict):
+    itemList = list()
+    print("Dict To list")
+    for key, value in dict.items():
+        print(key, value)
+        itemList.append([key, value])
+    return itemList
+
+def filterByMachineName(context, targetDict, substringName):
+    if SCANNETWORKSERVICES in context:
+        scanResults = context[SCANNETWORKSERVICES]
+        IPAddresses=list()
+        for ip, value in targetDict.items():
+            IPAddresses.append(ip)
+
+        for ip in IPAddresses:
+            if substringName in scanResults[ip]["hostname"]:
+                print("Found machine: ", scanResults[ip]["hostname"])
+                continue
+            else:
+                targetDict.pop(ip)
+
+        print("Target With matching Names", targetDict)
+        return targetDict
+
+
 
 def throwError(error):
     errorTable = {}

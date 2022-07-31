@@ -18,17 +18,29 @@ PASSWD = "1226"
 REMOTEDIR = "/home/spiegel"
 LOCALDIR = "/home/spiegel/Capstone-Project-2022/downloads"
 
+# Decision Tree Declerations
+# Agent Decision Tree 
+# Bob
+# Anderson
+# Smith
 
 # BOB Actions
+BOB = "bob"
 BOB_TRANSFREFILE = "transferFile"
 BOB_SUBACTION = "downloadFile"
 BOB_FILENAME = "user.txt"
 
+# ANDERSON Actions
+ANDERSON = "anderson"
+ANDERSON_TRANSFREFILE = "transferFile"
+ANDERSON_SUBACTION = "downloadFile"
+ANDERSON_FILENAME = "user.txt"
+ANDERSON_TARGET_NAME = "ubuntu"
+
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
 
-# Decision Tree Declerations
-BOB = "bob"
+
 
 # defining data types of primitives as constant strings
 SERVICE = 'service'
@@ -55,7 +67,7 @@ SCANNETWORKOPERATINGSYSTEMS = "scannetworkoperatingsystems"
 #									Decesion Tree Declerations						 #
 ######################################################################################
 @GeneticTree.declarePrimitive(ATTACKER, BOB, (RECON, SERVICE))
-def hard_coded_range_if(self, input_nodes, context):
+def bobsbrain(self, input_nodes, context):
 	print("Bob is building context")
 	context["username"] = USERNAME
 	context["password"] = PASSWD
@@ -66,6 +78,7 @@ def hard_coded_range_if(self, input_nodes, context):
 
 
 	# Set initial recon
+	print("Bob is performing recon")
 	context["action"] = SCANNETWORKSERVICES
 	context['service'] = RECON
 	service = context['service']
@@ -83,9 +96,11 @@ def hard_coded_range_if(self, input_nodes, context):
 	performAction(services, service, context)
 
 	# Filter Targets based on available SSH service
-	targetList = filterForService(context, SSH)
+	serviceList = filterForService(context, SSH)
+	targetList = dictToList(serviceList)
 	print("Targets: ", targetList)
 	# Select the Target to download file from
+	print("Making a choice from target list")
 	target = random.choice(targetList)
 	address = target[0]
 	port = target[1]
@@ -106,7 +121,57 @@ def hard_coded_range_if(self, input_nodes, context):
 
 
 
+@GeneticTree.declarePrimitive(ATTACKER, ANDERSON, (RECON, SERVICE))
+def andersonsbrain(self, input_nodes, context):
+	print("Anderson is building context")
+	context["username"] = USERNAME
+	context["password"] = PASSWD
+	context["localDirectory"] = LOCALDIR
+	context["remoteDirectory"] = REMOTEDIR
+	# Adding target to context
+	context['ip address'] = ""
 
+	# RECON NETWORK
+	print("Anderson is performing recon")
+	context["action"] = SCANNETWORKSERVICES
+	context['service'] = RECON
+	service = context['service']
+	# Set the Recon Tool to use
+	context["recontool"] =  NMAP
+	context["nmapFlags"] = "-sV"
+	# Set the IP CIDR to scan with the above tool
+	context["ipRange"] = getCIDRrange(context, "24")
+	print("Performing Recon")
+	# Perform action from services context
+	# this will allow for expansion of child nodes for more services
+	services = {}
+	services = dictActions(input_nodes, context)
+	print("Bobes available services actions",service)
+	performAction(services, service, context)
+
+	# Filter Targets based on available SSH service
+	print("Anderson, filtering for open SSH services")
+	targetList = filterForService(context, SSH)
+	print("Targets: ", targetList)
+	# Select the Target to download file from
+	targets = filterByMachineName(context, targetList, ANDERSON_TARGET_NAME)
+	target = dictToList(targets)
+	for box in target:
+		address = box[0]
+		port = box[1]
+		context["action"] = BOB_TRANSFREFILE
+		context["subaction"] = BOB_SUBACTION
+		context['service'] = SERVICE
+		context['protocol'] =  SSH
+		context["port"] = port
+
+		# Makign a random choice on IP addresses found
+
+		context["ip address"] = address
+		service = context['service']
+		print("Performing Services")
+		print(services)
+		performAction(services, service, context)
 
 
 ######################################################################################

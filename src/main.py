@@ -150,10 +150,8 @@ if __name__ == "__main__":
     # you must provide a context and a Tree or bob
     # will not know what to do
     print("\n\nAgent Bob")
-    # AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
+    # AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
     # AgentBob.run()
-    AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
-    AgentBob.run()
 
     # # Agent Anderson
     # # Main goal: Find a target without knowing the IP address and download the flag
@@ -170,7 +168,8 @@ if __name__ == "__main__":
     # AgentAnderson.generateTree(ATTACKER, SERVICE, 4)
     # AgentAnderson.attackTargets(possibleTargets)
 
-
+    AgentAnderson = SimpleAgent("Anderson", unifiedContext, ATTACKER, ANDERSON)
+    AgentAnderson.run()
     # # Agent Smith
     # # Main goal: Fing Targets with open SSH services and upload itself to the remote system
     # print("\n\nAgent Smith")
