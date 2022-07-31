@@ -82,7 +82,7 @@ if __name__ == "__main__":
                         "subaction":"downloadFile",
                         "localDirectory": "downloads/sftp",
                         "remoteDirectory": "flags",
-                        "file": "user1.txt",
+                        "fileName": "user1.txt",
                         "username": "spiegel",
                         "password": "1226"
                         }
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                         "subaction":"uploadFile",
                         "localDirectory": "downloads/sftp",
                         "remoteDirectory": "flags",
-                        "file": "testing.txt",
+                        "fileName": "testing.txt",
                         "username": "spiegel",
                         "password": "1226"
                         }
@@ -120,7 +120,7 @@ if __name__ == "__main__":
                     "subaction":"",
                     "localDirectory": "downloads/sftp",
                     "remoteDirectory": "flags",
-                    "file": "testing.txt",
+                    "fileName": "testing.txt",
                     "username": "spiegel",
                     "password": "1226"
                     }

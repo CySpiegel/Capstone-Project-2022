@@ -266,7 +266,7 @@ def transferFiles(self, input_nodes, context):
 
 	# What kind of tranfer
 	subaction = context['subaction']
-	fileName = context['file']
+	fileName = context['fileName']
 	remoteDirectory = context['remoteDirectory']
 	localDirectory = context['localDirectory']
 	# Getting SSH object from context
@@ -286,7 +286,7 @@ def transferFiles(self, input_nodes, context):
 		sftp.get(source, destination)
 
 	if subaction == "uploadFile":
-		source = "testing.txt"
+		source = context['fileName']
 
 		source = buildFilePath(localDirectory, fileName)
 		destination = buildFilePath(remoteDirectory, fileName)
