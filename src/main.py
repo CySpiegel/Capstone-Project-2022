@@ -155,19 +155,7 @@ if __name__ == "__main__":
 
     # # Agent Anderson
     # # Main goal: Find a target without knowing the IP address and download the flag
-    # print("\n\nAgent Anderson")
-    # # Provide the context for what you want Agent Anderson to do
-    # # We provide the recon context
-    # AgentAnderson = SimpleAgent("Anderson", reconContext)
-    # # Must recon the network
-    # AgentAnderson.recon("24")
-    # possibleTargets = AgentAnderson.filterForService(SSH)
-    # print("Targets with Service: ", possibleTargets)
-    # # Loginto SSH services and stetal the flags from a known location
-    # AgentAnderson.replaceContext(downloadFileSSH)
-    # AgentAnderson.generateTree(ATTACKER, SERVICE, 4)
-    # AgentAnderson.attackTargets(possibleTargets)
-
+    print("\n\nAgent Anderson")
     AgentAnderson = SimpleAgent("Anderson", unifiedContext, ATTACKER, ANDERSON)
     AgentAnderson.run()
     # # Agent Smith

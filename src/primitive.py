@@ -29,6 +29,8 @@ BOB = "bob"
 BOB_TRANSFREFILE = "transferFile"
 BOB_SUBACTION = "downloadFile"
 BOB_FILENAME = "user.txt"
+BOB_NMAP_FLAG = "-sV"
+BOB_CIDR = "24"
 
 # ANDERSON Actions
 ANDERSON = "anderson"
@@ -36,6 +38,8 @@ ANDERSON_TRANSFREFILE = "transferFile"
 ANDERSON_SUBACTION = "downloadFile"
 ANDERSON_FILENAME = "user.txt"
 ANDERSON_TARGET_NAME = "ubuntu"
+ANDERSON_NMAP_FLAG = "-sS"
+ANDERSON_CIDR = "24"
 
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
@@ -84,9 +88,9 @@ def bobsbrain(self, input_nodes, context):
 	service = context['service']
 	# Set the Recon Tool to use
 	context["recontool"] =  NMAP
-	context["nmapFlags"] = "-sV"
+	context["nmapFlags"] = BOB_NMAP_FLAG
 	# Set the IP CIDR to scan with the above tool
-	context["ipRange"] = getCIDRrange(context, "24")
+	context["ipRange"] = getCIDRrange(context, BOB_CIDR)
 	print("Performing Recon")
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -120,7 +124,7 @@ def bobsbrain(self, input_nodes, context):
 
 
 
-
+# AGENT ANDERSON BRAIN
 @GeneticTree.declarePrimitive(ATTACKER, ANDERSON, (RECON, SERVICE))
 def andersonsbrain(self, input_nodes, context):
 	print("Anderson is building context")
@@ -138,7 +142,7 @@ def andersonsbrain(self, input_nodes, context):
 	service = context['service']
 	# Set the Recon Tool to use
 	context["recontool"] =  NMAP
-	context["nmapFlags"] = "-sV"
+	context["nmapFlags"] = ANDERSON_NMAP_FLAG
 	# Set the IP CIDR to scan with the above tool
 	context["ipRange"] = getCIDRrange(context, "24")
 	print("Performing Recon")
