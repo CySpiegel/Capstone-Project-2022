@@ -86,16 +86,18 @@ def hard_coded_range_if(self, input_nodes, context):
 	targetList = filterForService(context, SSH)
 	print("Targets: ", targetList)
 	# Select the Target to download file from
-
+	target = random.choice(targetList)
+	address = target[0]
+	port = target[1]
 	context["action"] = BOB_TRANSFREFILE
 	context["subaction"] = BOB_SUBACTION
 	context['service'] = SERVICE
 	context['protocol'] =  SSH
-	context["port"] = 22
+	context["port"] = port
 
 	# Makign a random choice on IP addresses found
-	target = random.choice(targetList)
-	context["ip address"] = target
+
+	context["ip address"] = address
 	service = context['service']
 	print("Performing Services")
 	print(services)

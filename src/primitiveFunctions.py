@@ -80,15 +80,17 @@ def filterForService(context, service):
         for key in scanResults:
             IPAddressList.append(key)
         
-        for adress in IPAddressList:
-            services = scanResults[adress]["services"]
+        for address in IPAddressList:
+            if address == context["localIP"]:
+                continue
+            services = scanResults[address]["services"]
 
             if service in services:
                 targetedService = services[service]
                 state = targetedService["state"]
                 if state == "open":
-                    targetList.append(adress)
-        targetList.remove(context["localIP"])
+                    portid = targetedService["portid"]
+                    targetList.append([address, portid])
         storeAs = service + "Targets"
         context[storeAs] = targetList
         return targetList

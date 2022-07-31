@@ -35,6 +35,35 @@ def parseNmapOSScan(results):
     for key, value in results.items():
         listOfIPAddr.append(key)
 
+SCANNETWORKSERVICES = 'scannetworkservices'
+
+def filterForService(context, service):
+    if SCANNETWORKSERVICES in context:
+        scanResults = context[SCANNETWORKSERVICES]
+        targetList = list()
+        IPAddressList = list()
+        # Build list of IP Addresses from scan results
+        for key in scanResults:
+            IPAddressList.append(key)
+        
+        for adress in IPAddressList:
+            services = scanResults[adress]["services"]
+
+            if service in services:
+                targetedService = services[service]
+                state = targetedService["state"]
+                portID = targetedService["portid"]
+                print("PortID", portID)
+                if state == "open":
+                    targetList.append(adress)
+        targetList.remove(context["localIP"])
+        storeAs = service + "Targets"
+        context[storeAs] = targetList
+        return targetList
+    else:
+        throwError(2)
+        return []
+
 
 if __name__ == "__main__":
     nmap = nmap3.Nmap()
