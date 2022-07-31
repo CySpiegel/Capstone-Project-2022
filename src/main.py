@@ -137,9 +137,9 @@ if __name__ == "__main__":
                             "password": "1226"
                             }
 
-    unifiedContext = {  "action": TRANSFREFILE,
-                        "subaction": SUBACTION,
-                        "file": FILENAME
+    unifiedContext = {  "action": BOB_TRANSFREFILE,
+                        "subaction": BOB_SUBACTION,
+                        "fileName": BOB_FILENAME
                         }
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, SERVICE)

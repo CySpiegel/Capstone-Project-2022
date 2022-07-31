@@ -15,9 +15,14 @@ def dictActions(input_nodes, context):
 
 # Perform the nodes action based on context
 def performAction(actions, action, context):
+    print("From PerformAction")
+    print("Actions", actions)
+    print("Attempting Action", action)
+    print("Context Action", context["action"])
     if action in actions:
         return actions[action].execute(context)
     else:
+        print("Action Missing: ", action)
         return throwError(1)
 
 

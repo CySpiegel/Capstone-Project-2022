@@ -16,13 +16,13 @@ import time
 USERNAME = "spiegel"
 PASSWD = "1226"
 REMOTEDIR = "/home/spiegel"
-LOCALDIR = "/home/spiegel/Capstone-Project-2022/src"
+LOCALDIR = "/home/spiegel/Capstone-Project-2022/downloads"
 
 
-# Actions
-TRANSFREFILE = "transferFile"
-SUBACTION = "downloadFile"
-FILENAME = "user.txt"
+# BOB Actions
+BOB_TRANSFREFILE = "transferFile"
+BOB_SUBACTION = "downloadFile"
+BOB_FILENAME = "user.txt"
 
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
@@ -74,19 +74,32 @@ def hard_coded_range_if(self, input_nodes, context):
 	context["nmapFlags"] = "-sV"
 	# Set the IP CIDR to scan with the above tool
 	context["ipRange"] = getCIDRrange(context, "24")
-	print("ipRange", context["ipRange"] )
-
+	print("Performing Recon")
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
 	services = {}
 	services = dictActions(input_nodes, context)
-	print("service",service)
+	print("Bobes available services actions",service)
 	performAction(services, service, context)
 
+	# Filter Targets based on available SSH service
 	targetList = filterForService(context, SSH)
-	print(targetList)
+	print("Targets: ", targetList)
+	# Select the Target to download file from
 
+	context["action"] = BOB_TRANSFREFILE
+	context["subaction"] = BOB_SUBACTION
+	context['service'] = SERVICE
+	context['protocol'] =  SSH
+	context["port"] = 22
 
+	# Makign a random choice on IP addresses found
+	target = random.choice(targetList)
+	context["ip address"] = target
+	service = context['service']
+	print("Performing Services")
+	print(services)
+	performAction(services, service, context)
 
 
 
@@ -101,14 +114,21 @@ def hard_coded_range_if(self, input_nodes, context):
 # This is the root primitive of the Services node. 
 @GeneticTree.declarePrimitive(ATTACKER, SERVICE, (SFTP, SSH))
 def hard_coded_range_if(self, input_nodes, context):
-	service = context['service']
+	# Informant clause to inform parrent node on what this node is
+	print('Service Node')
+	inform = context['inform']
+	if inform == "unknown":
+		return SERVICE
 
-	
+	service = context['protocol']
+
+	print("Action", context['action'])
 
 	# Perform action from services context
-	# this will allow for expansion of child nodes for more services
+	# this will allow for expansion of child nodes for more services	
 	services = {}
 	services = dictActions(input_nodes, context)
+	print("Services in Service Node", services)
 	return performAction(services, service, context)
 
 
@@ -121,14 +141,15 @@ def hard_coded_range_if(self, input_nodes, context):
 # SSH Login Node. This will loginto the supplied address "ip address" found in context
 @GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS))
 def determinSSHActions(self, input_nodes, context):
-	ip_address = context['ip address'] 	# we assume the provided context
-	action = context['action']		# get the current action from context
-	
+	print('SSH Node')
 	# Informant clause to inform parrent node on what this node is
 	inform = context['inform']
 	if inform == "unknown":
 		return SSH
 
+
+	ip_address = context['ip address'] 	# we assume the provided context
+	action = context['action']		# get the current action from context
 	# getting SSH parameters from context
 	port = context['port']
 	username = context['username']
@@ -144,7 +165,6 @@ def determinSSHActions(self, input_nodes, context):
 	# 'action' in context must be set and possibly 'subaction' depending on leaf used
 	actions = {}
 	actions = dictActions(input_nodes, context)
-	print("action", action)
 	return performAction(actions, action, context)
 
 ######################################################################################
