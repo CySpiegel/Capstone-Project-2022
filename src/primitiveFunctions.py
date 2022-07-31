@@ -1,6 +1,8 @@
 import socket
 import nmap3
 
+SCANNETWORKSERVICES = 'scannetworkservices'
+
 #return a dictionary of actions available
 def dictActions(input_nodes, context):
     context['inform'] = 'unknown'
@@ -18,10 +20,6 @@ def performAction(actions, action, context):
     else:
         return throwError(1)
 
-def buildContext(context):
-    # initial context
-    context = {"ip address": "192.168.1.124", "service": "ssh", "action": "getFile", "file": "user.txt", "filepath": "/home/spiegel/", "username": "spiegel", "password": "1226"}
-    return context
 
 def buildFilePath(path, fileName):
     return path + "/" + fileName
@@ -62,9 +60,36 @@ def parseNmapNetworkServices(results):
 
     return targetList
 
-def getCIDRrange(range):
-    ipAddress = extract_ip()
+def getCIDRrange(context, range):
+    ipAddress = context["localIP"]
     ipRange = ipAddress + "/" + str(range)
+    return ipRange
+
+
+def filterForService(context, service):
+    if SCANNETWORKSERVICES in context:
+        scanResults = context[SCANNETWORKSERVICES]
+        targetList = list()
+        IPAddressList = list()
+        # Build list of IP Addresses from scan results
+        for key in scanResults:
+            IPAddressList.append(key)
+        
+        for adress in IPAddressList:
+            services = scanResults[adress]["services"]
+
+            if service in services:
+                targetedService = services[service]
+                state = targetedService["state"]
+                if state == "open":
+                    targetList.append(adress)
+        targetList.remove(context["localIP"])
+        storeAs = service + "Targets"
+        context[storeAs] = targetList
+        return targetList
+    else:
+        throwError(2)
+        return []
 
 def throwError(error):
     errorTable = {}

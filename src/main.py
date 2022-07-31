@@ -153,7 +153,7 @@ if __name__ == "__main__":
     # AgentBob = SimpleAgent("BoB", downloadFileSSH, Tree)
     # AgentBob.run()
     AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
-    #AgentBob.run()
+    AgentBob.run()
 
     # # Agent Anderson
     # # Main goal: Find a target without knowing the IP address and download the flag

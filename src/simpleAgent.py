@@ -13,9 +13,6 @@ class SimpleAgent:
         self.context = context
         self.context["localIP"] = extract_ip()
 
-        if context == 0:
-            self.context = self.standardTree()
-
     # Executes the current context on 
     # the tree currently stored
     def actionsToTake(self, context):
@@ -24,6 +21,7 @@ class SimpleAgent:
     def buildTree(self, species, rootNode):
         Tree = GeneticTree(species, rootNode)
         Tree.initialize(4, full=True)
+        return Tree
 
     # Exucutes the currently stored context the 
     # agent has available on the current tree
@@ -57,32 +55,6 @@ class SimpleAgent:
     def hostIP(self):
         hostIP = self.context['localIP']
         return hostIP
-
-    def filterForService(self, service):
-        if SCANNETWORKSERVICES in self.context:
-            scanResults = self.context[SCANNETWORKSERVICES]
-            targetList = list()
-            IPAddressList = list()
-            # Build list of IP Addresses from scan results
-            for key in scanResults:
-                IPAddressList.append(key)
-            
-            for adress in IPAddressList:
-                services = scanResults[adress]["services"]
-
-                if service in services:
-                    targetedService = services[service]
-                    state = targetedService["state"]
-                    if state == "open":
-                        targetList.append(adress)
-            targetList.remove(self.hostIP())
-            storeAs = service + "Targets"
-            self.context[storeAs] = targetList
-            return targetList
-        else:
-            throwError(2)
-            return []
-
 
     def recon(self, cidr):
         # Create Recon Tree

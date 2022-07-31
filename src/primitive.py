@@ -61,18 +61,30 @@ def hard_coded_range_if(self, input_nodes, context):
 	context["password"] = PASSWD
 	context["localDirectory"] = LOCALDIR
 	context["remoteDirectory"] = REMOTEDIR
+	# Adding target to context
+	context['ip address'] = ""
+
 
 	# Set initial recon
+	context["action"] = SCANNETWORKSERVICES
 	context['service'] = RECON
-	service = context['service'] 
-
+	service = context['service']
+	# Set the Recon Tool to use
+	context["recontool"] =  NMAP
+	context["nmapFlags"] = "-sV"
+	# Set the IP CIDR to scan with the above tool
+	context["ipRange"] = getCIDRrange(context, "24")
+	print("ipRange", context["ipRange"] )
 
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
 	services = {}
 	services = dictActions(input_nodes, context)
-	exit(1)
-	return performAction(services, service, context)
+	print("service",service)
+	performAction(services, service, context)
+
+	targetList = filterForService(context, SSH)
+	print(targetList)
 
 
 
@@ -288,7 +300,7 @@ def hard_coded_range_if(self, input_nodes, context):
 	if inform == "unknown":
 		return RECON
 	
-	service = context['recon']
+	service = context['recontool']
 	
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -318,9 +330,10 @@ def scanNetworkServices(self, input_nodes, context):
 
 	print("Scanning Network")
 	ipRange = context["ipRange"]
+	nmapFlags = context["nmapFlags"]
 	nmap = nmap3.Nmap()
 	results = {}
-	results = nmap.scan_top_ports(ipRange, args="-sV")
+	results = nmap.scan_top_ports(ipRange, args=nmapFlags)
 	targets = parseNmapNetworkServices(results)
 	context[SCANNETWORKSERVICES] = targets
 	print('Scan Network Services')
