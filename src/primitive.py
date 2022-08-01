@@ -7,6 +7,7 @@ from scp import SCPClient
 import scp
 import nmap3
 
+
 import random
 import socket 
 import os.path
@@ -16,7 +17,7 @@ import time
 USERNAME = "root"
 PASSWD = ""
 REMOTEDIR = "/opt"
-LOCALDIR = "/Capstone-Project-2022/downloads/flags"
+LOCALDIR = "/Capstone-Project-2022/downloads"
 
 # Decision Tree Declerations
 # Agent Decision Tree 
@@ -37,7 +38,7 @@ ANDERSON = "anderson"
 ANDERSON_TRANSFREFILE = "transferFile"
 ANDERSON_SUBACTION = "downloadFile"
 ANDERSON_FILENAME = "user.txt"
-ANDERSON_TARGET_NAME = "ubuntu"
+ANDERSON_TARGET_NAME = "user"
 ANDERSON_NMAP_FLAG = "-sS"
 ANDERSON_CIDR = "24"
 
@@ -163,16 +164,20 @@ def andersonsbrain(self, input_nodes, context):
 	for box in target:
 		address = box[0]
 		port = box[1]
-		context["action"] = BOB_TRANSFREFILE
-		context["subaction"] = BOB_SUBACTION
+		context["action"] = ANDERSON_TRANSFREFILE
+		context["subaction"] = ANDERSON_SUBACTION
 		context['service'] = SERVICE
 		context['protocol'] =  SSH
 		context["port"] = port
+
 
 		# Makign a random choice on IP addresses found
 
 		context["ip address"] = address
 		service = context['service']
+		directory = mkdir(LOCALDIR, address)
+		context["localDirectory"] = directory
+
 		print("Performing Services")
 		print(services)
 		performAction(services, service, context)

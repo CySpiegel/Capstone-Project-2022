@@ -1,7 +1,13 @@
 import socket
 import nmap3
+import os
 
 SCANNETWORKSERVICES = 'scannetworkservices'
+
+def mkdir(localDir, address):
+    newDir = localDir + "/" + address
+    os.mkdir(newDir)
+    return newDir
 
 #return a dictionary of actions available
 def dictActions(input_nodes, context):
