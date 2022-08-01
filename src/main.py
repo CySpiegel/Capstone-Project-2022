@@ -141,6 +141,10 @@ if __name__ == "__main__":
                         "subaction": BOB_SUBACTION,
                         "fileName": BOB_FILENAME
                         }
+    unifiedContext2 = {  "action": ANDERSON_TRANSFREFILE,
+                        "subaction": ANDERSON_SUBACTION,
+                        "fileName": ANDERSON_FILENAME
+                        }
     # Randomly Grow tree to a depth of 3 if possible
     Tree = GeneticTree(ATTACKER, SERVICE)
     Tree.initialize(3, full=True)
@@ -156,7 +160,7 @@ if __name__ == "__main__":
     # # Agent Anderson
     # # Main goal: Find a target without knowing the IP address and download the flag
     print("\n\nAgent Anderson")
-    AgentAnderson = SimpleAgent("Anderson", unifiedContext, ATTACKER, ANDERSON)
+    AgentAnderson = SimpleAgent("Anderson", unifiedContext2, ATTACKER, ANDERSON)
     AgentAnderson.run()
     # # Agent Smith
     # # Main goal: Fing Targets with open SSH services and upload itself to the remote system

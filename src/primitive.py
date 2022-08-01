@@ -13,10 +13,10 @@ import os.path
 import time
 
 # Needed Information for Agents to function
-USERNAME = "spiegel"
+USERNAME = "root"
 PASSWD = "1226"
-REMOTEDIR = "/home/spiegel"
-LOCALDIR = "/home/spiegel/Capstone-Project-2022/downloads"
+REMOTEDIR = "/opt"
+LOCALDIR = "/etc/Capstone-Project-2022/downloads"
 
 # Decision Tree Declerations
 # Agent Decision Tree 
