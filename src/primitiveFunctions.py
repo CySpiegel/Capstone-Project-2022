@@ -122,11 +122,12 @@ def filterByMachineName(context, targetDict, substringName):
             IPAddresses.append(ip)
 
         for ip in IPAddresses:
-            if substringName in scanResults[ip]["hostname"]:
-                print("Found machine: ", scanResults[ip]["hostname"])
-                continue
-            else:
-                targetDict.pop(ip)
+            if "hostname" in scanResults[ip]:
+                if substringName in scanResults[ip]["hostname"]:
+                    print("Found machine: ", scanResults[ip]["hostname"])
+                    continue
+                else:
+                    targetDict.pop(ip)
 
         print("Target With matching Names", targetDict)
         return targetDict
