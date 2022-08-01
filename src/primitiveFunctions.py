@@ -60,7 +60,8 @@ def parseNmapNetworkServices(results):
             currentDict = targetList[IPAddress]
             currentDict[portName] = portInfo
         servicesDict = {}
-        servicesDict['hostname'] = results[IPAddress]["hostname"][0]["name"]
+        if results[IPAddress]["hostname"] != []:
+            servicesDict['hostname'] = results[IPAddress]["hostname"][0]["name"]
         servicesDict["services"] =  currentDict
         targetList[IPAddress] = servicesDict
 

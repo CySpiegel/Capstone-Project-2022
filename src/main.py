@@ -145,23 +145,22 @@ if __name__ == "__main__":
                         "subaction": ANDERSON_SUBACTION,
                         "fileName": ANDERSON_FILENAME
                         }
-    # Randomly Grow tree to a depth of 3 if possible
-    Tree = GeneticTree(ATTACKER, SERVICE)
-    Tree.initialize(3, full=True)
 
     # Agent Bob
     # Bob is well Bob and requires a lot of help
     # you must provide a context and a Tree or bob
     # will not know what to do
-    print("\n\nAgent Bob")
-    # AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
-    # AgentBob.run()
+    #print("\n\nAgent Bob")
+    #AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
+    #AgentBob.run()
 
     # # Agent Anderson
     # # Main goal: Find a target without knowing the IP address and download the flag
     print("\n\nAgent Anderson")
     AgentAnderson = SimpleAgent("Anderson", unifiedContext2, ATTACKER, ANDERSON)
     AgentAnderson.run()
+
+
     # # Agent Smith
     # # Main goal: Fing Targets with open SSH services and upload itself to the remote system
     # print("\n\nAgent Smith")

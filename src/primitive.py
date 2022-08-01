@@ -16,7 +16,7 @@ import time
 USERNAME = "root"
 PASSWD = ""
 REMOTEDIR = "/opt"
-LOCALDIR = "/capstone/Capstone-Project-2022/downloads"
+LOCALDIR = "/Capstone-Project-2022/downloads/flags"
 
 # Decision Tree Declerations
 # Agent Decision Tree 
@@ -30,7 +30,7 @@ BOB_TRANSFREFILE = "transferFile"
 BOB_SUBACTION = "downloadFile"
 BOB_FILENAME = "user.txt"
 BOB_NMAP_FLAG = "-sV"
-BOB_CIDR = "8"
+BOB_CIDR = "24"
 
 # ANDERSON Actions
 ANDERSON = "anderson"
@@ -39,7 +39,7 @@ ANDERSON_SUBACTION = "downloadFile"
 ANDERSON_FILENAME = "user.txt"
 ANDERSON_TARGET_NAME = "ubuntu"
 ANDERSON_NMAP_FLAG = "-sS"
-ANDERSON_CIDR = "8"
+ANDERSON_CIDR = "24"
 
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
