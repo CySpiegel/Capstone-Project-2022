@@ -42,6 +42,15 @@ ANDERSON_TARGET_NAME = "user"
 ANDERSON_NMAP_FLAG = "-sS"
 ANDERSON_CIDR = "24"
 
+# ANDERSON Actions
+SMITH = "smith"
+SMITH_TRANSFREFILE = "transferFile"
+SMITH_SUBACTION = "uploadDirectory"
+SMITH_DIRECTORY = "/Capstone-Project-2022/"
+SMITH_TARGET_NAME = "user"
+SMITH_NMAP_FLAG = "-sS"
+SMITH_CIDR = "24"
+
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
 
@@ -145,7 +154,64 @@ def andersonsbrain(self, input_nodes, context):
 	context["recontool"] =  NMAP
 	context["nmapFlags"] = ANDERSON_NMAP_FLAG
 	# Set the IP CIDR to scan with the above tool
-	context["ipRange"] = getCIDRrange(context, "24")
+	context["ipRange"] = getCIDRrange(context, ANDERSON_CIDR)
+	print("Performing Recon")
+	# Perform action from services context
+	# this will allow for expansion of child nodes for more services
+	services = {}
+	services = dictActions(input_nodes, context)
+	print("Bobes available services actions",service)
+	performAction(services, service, context)
+
+	# Filter Targets based on available SSH service
+	print("Anderson, filtering for open SSH services")
+	targetList = filterForService(context, SSH)
+	print("Targets: ", targetList)
+
+	# Select the Targets to download file from by machine hostname
+	targets = filterByMachineName(context, targetList, ANDERSON_TARGET_NAME)
+	target = dictToList(targets)
+	for box in target:
+		address = box[0]
+		port = box[1]
+		context["action"] = ANDERSON_TRANSFREFILE
+		context["subaction"] = ANDERSON_SUBACTION
+		context['service'] = SERVICE
+		context['protocol'] =  SSH
+		context["port"] = port
+
+		context["ip address"] = address
+		service = context['service']
+		directory = mkdir(LOCALDIR, address)
+		context["localDirectory"] = directory
+
+		print("Performing Services")
+		print(services)
+		performAction(services, service, context)
+
+
+
+# AGENT ANDERSON BRAIN
+@GeneticTree.declarePrimitive(ATTACKER, SMITH, (RECON, SERVICE))
+def andersonsbrain(self, input_nodes, context):
+	print("Smith is building context")
+	context["username"] = USERNAME
+	context["password"] = PASSWD
+	context["localDirectory"] = LOCALDIR
+	context["remoteDirectory"] = REMOTEDIR
+	# Adding target to context
+	context['ip address'] = ""
+
+	# RECON NETWORK
+	print("Smith is performing recon")
+	context["action"] = SCANNETWORKSERVICES
+	context['service'] = RECON
+	service = context['service']
+	# Set the Recon Tool to use
+	context["recontool"] =  NMAP
+	context["nmapFlags"] = SMITH_NMAP_FLAG
+	# Set the IP CIDR to scan with the above tool
+	context["ipRange"] = getCIDRrange(context, SMITH_CIDR)
 	print("Performing Recon")
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -159,29 +225,20 @@ def andersonsbrain(self, input_nodes, context):
 	targetList = filterForService(context, SSH)
 	print("Targets: ", targetList)
 	# Select the Target to download file from
-	targets = filterByMachineName(context, targetList, ANDERSON_TARGET_NAME)
+	targets = filterByMachineName(context, targetList, SMITH_TARGET_NAME)
 	target = dictToList(targets)
 	for box in target:
 		address = box[0]
 		port = box[1]
-		context["action"] = ANDERSON_TRANSFREFILE
-		context["subaction"] = ANDERSON_SUBACTION
+		context["action"] = SMITH_TRANSFREFILE
+		context["subaction"] = SMITH_SUBACTION
 		context['service'] = SERVICE
 		context['protocol'] =  SSH
 		context["port"] = port
 
-
-		# Makign a random choice on IP addresses found
-
-		context["ip address"] = address
-		service = context['service']
-		directory = mkdir(LOCALDIR, address)
-		context["localDirectory"] = directory
-
 		print("Performing Services")
 		print(services)
 		performAction(services, service, context)
-
 
 ######################################################################################
 #									SERVICE Declerations							 #
