@@ -1,0 +1,9 @@
+# SMITH Actions
+SMITH = "smith"
+SMITH_TRANSFREFILE = "transferFile"
+SMITH_SUBACTION = "uploadDirectory"
+SMITH_DIRECTORY = "/Capstone-Project-2022/"
+SMITH_TARGET_DIRECTORY = "/opt"
+SMITH_TARGET_NAME = "user"
+SMITH_NMAP_FLAG = "-sS"
+SMITH_CIDR = "24"

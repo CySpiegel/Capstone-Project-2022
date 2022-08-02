@@ -73,8 +73,7 @@ def parseNmapNetworkServices(results):
 
     return targetList
 
-def getCIDRrange(context, range):
-    ipAddress = context["localIP"]
+def getCIDRrange(ipAddress, range):
     ipRange = ipAddress + "/" + str(range)
     return ipRange
 

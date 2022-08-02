@@ -13,48 +13,22 @@ import socket
 import os.path
 import time
 
+#importing agents
+from agents.bob import *
+from agents.anderson import *
+from agents.smith import *
+
+# Subnet list for galaxy to cut down on time needed for Agent network discovery
+GALAXY_SUBNET_LIST = ["10.0.0.0","10.1.0.0","10.2.0.0","10.3.0.0","10.3.1.0","10.3.200.0"]
+
 # Needed Information for Agents to function
 USERNAME = "root"
 PASSWD = ""
 REMOTEDIR = "/opt"
 LOCALDIR = "/Capstone-Project-2022/downloads"
 
-# Decision Tree Declerations
-# Agent Decision Tree 
-# Bob
-# Anderson
-# Smith
-
-# BOB Actions
-BOB = "bob"
-BOB_TRANSFREFILE = "transferFile"
-BOB_SUBACTION = "downloadFile"
-BOB_FILENAME = "user.txt"
-BOB_NMAP_FLAG = "-sV"
-BOB_CIDR = "24"
-
-# ANDERSON Actions
-ANDERSON = "anderson"
-ANDERSON_TRANSFREFILE = "transferFile"
-ANDERSON_SUBACTION = "downloadFile"
-ANDERSON_FILENAME = "user.txt"
-ANDERSON_TARGET_NAME = "user"
-ANDERSON_NMAP_FLAG = "-sS"
-ANDERSON_CIDR = "24"
-
-# ANDERSON Actions
-SMITH = "smith"
-SMITH_TRANSFREFILE = "transferFile"
-SMITH_SUBACTION = "uploadDirectory"
-SMITH_DIRECTORY = "/Capstone-Project-2022/"
-SMITH_TARGET_NAME = "user"
-SMITH_NMAP_FLAG = "-sS"
-SMITH_CIDR = "24"
-
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
-
-
 
 # defining data types of primitives as constant strings
 SERVICE = 'service'
@@ -100,7 +74,7 @@ def bobsbrain(self, input_nodes, context):
 	context["recontool"] =  NMAP
 	context["nmapFlags"] = BOB_NMAP_FLAG
 	# Set the IP CIDR to scan with the above tool
-	context["ipRange"] = getCIDRrange(context, BOB_CIDR)
+	context["ipRange"] = getCIDRrange(context["localIP"], BOB_CIDR)
 	print("Performing Recon")
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -154,7 +128,7 @@ def andersonsbrain(self, input_nodes, context):
 	context["recontool"] =  NMAP
 	context["nmapFlags"] = ANDERSON_NMAP_FLAG
 	# Set the IP CIDR to scan with the above tool
-	context["ipRange"] = getCIDRrange(context, ANDERSON_CIDR)
+	context["ipRange"] = getCIDRrange(context["localIP"], ANDERSON_CIDR)
 	print("Performing Recon")
 	# Perform action from services context
 	# this will allow for expansion of child nodes for more services
@@ -191,9 +165,9 @@ def andersonsbrain(self, input_nodes, context):
 
 
 
-# AGENT ANDERSON BRAIN
+# AGENT Smith BRAIN
 @GeneticTree.declarePrimitive(ATTACKER, SMITH, (RECON, SERVICE))
-def andersonsbrain(self, input_nodes, context):
+def smithbrain(self, input_nodes, context):
 	print("Smith is building context")
 	context["username"] = USERNAME
 	context["password"] = PASSWD
@@ -210,35 +184,43 @@ def andersonsbrain(self, input_nodes, context):
 	# Set the Recon Tool to use
 	context["recontool"] =  NMAP
 	context["nmapFlags"] = SMITH_NMAP_FLAG
-	# Set the IP CIDR to scan with the above tool
-	context["ipRange"] = getCIDRrange(context, SMITH_CIDR)
-	print("Performing Recon")
-	# Perform action from services context
-	# this will allow for expansion of child nodes for more services
-	services = {}
-	services = dictActions(input_nodes, context)
-	print("Bobes available services actions",service)
-	performAction(services, service, context)
 
-	# Filter Targets based on available SSH service
-	print("Anderson, filtering for open SSH services")
-	targetList = filterForService(context, SSH)
-	print("Targets: ", targetList)
-	# Select the Target to download file from
-	targets = filterByMachineName(context, targetList, SMITH_TARGET_NAME)
-	target = dictToList(targets)
-	for box in target:
-		address = box[0]
-		port = box[1]
-		context["action"] = SMITH_TRANSFREFILE
-		context["subaction"] = SMITH_SUBACTION
-		context['service'] = SERVICE
-		context['protocol'] =  SSH
-		context["port"] = port
-
-		print("Performing Services")
-		print(services)
+	for subnet in GALAXY_SUBNET_LIST:
+		# Set the IP CIDR to scan with the above tool
+		context["ipRange"] = getCIDRrange(subnet, SMITH_CIDR)
+		print("Performing Recon")
+		# Perform action from services context
+		# this will allow for expansion of child nodes for more services
+		services = {}
+		services = dictActions(input_nodes, context)
+		print("Bobes available services actions",service)
 		performAction(services, service, context)
+
+		# Filter Targets based on available SSH service
+		print("Anderson, filtering for open SSH services")
+		targetList = filterForService(context, SSH)
+		print("Targets: ", targetList)
+		# Select the Target to download file from
+		targets = filterByMachineName(context, targetList, SMITH_TARGET_NAME)
+		target = dictToList(targets)
+		for box in target:
+			address = box[0]
+			port = box[1]
+			context["action"] = SMITH_TRANSFREFILE
+			context["subaction"] = SMITH_SUBACTION
+			context['service'] = SERVICE
+			context['protocol'] =  SSH
+			context["port"] = port
+
+			context["ip address"] = address
+			service = context['service']
+			context["localDirectory"] = SMITH_DIRECTORY
+			context["remoteDirectory"] = SMITH_TARGET_DIRECTORY
+
+			print("Performing Services")
+			print(services)
+			performAction(services, service, context)
+	print("Agent Smith Complete")
 
 ######################################################################################
 #									SERVICE Declerations							 #
@@ -408,9 +390,6 @@ def transferFiles(self, input_nodes, context):
 	transport = ssh.get_transport()
 	#establishing sftp connection from ssh trannsport object session
 	sftp = paramiko.SFTPClient.from_transport(transport)
-
-
-
 
 	if subaction == "downloadFile":
 		# Download File
