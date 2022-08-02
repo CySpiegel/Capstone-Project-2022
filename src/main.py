@@ -141,18 +141,22 @@ if __name__ == "__main__":
                         "subaction": BOB_SUBACTION,
                         "fileName": BOB_FILENAME
                         }
-    unifiedContext2 = {  "action": ANDERSON_TRANSFREFILE,
-                        "subaction": ANDERSON_SUBACTION,
+    unifiedContext2 = { "action": SMITH_TRANSFREFILE,
+                        "subaction": SMITH_SUBACTION,
                         "fileName": ANDERSON_FILENAME
                         }
 
+    unifiedContext3 = {  "action": ANDERSON_TRANSFREFILE,
+                    "subaction": ANDERSON_SUBACTION,
+                    "fileName": ANDERSON_FILENAME
+                    }
+
     # Agent Bob
-    # Bob is well Bob and requires a lot of help
-    # you must provide a context and a Tree or bob
-    # will not know what to do
-    #print("\n\nAgent Bob")
-    #AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
-    #AgentBob.run()
+    # Bob is well Bob and will map the network and randomly chose an IP to download the flag from
+    print("\n\nAgent Bob")
+    AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
+    AgentBob.run()
+
 
     # # Agent Anderson
     # # Main goal: Find a target without knowing the IP address and download the flag
@@ -163,17 +167,7 @@ if __name__ == "__main__":
 
     # # Agent Smith
     # # Main goal: Fing Targets with open SSH services and upload itself to the remote system
-    # print("\n\nAgent Smith")
-    # AgentSmith = SimpleAgent("Anderson", reconContext)
-    # # We provide the range to scan on the network
-    # AgentSmith.recon("24")
-    # possibleTargets = AgentSmith.filterForService(SSH)
-    # print("Targets with Service: ", possibleTargets)
-    # # Loginto SSH services and stetal the flags from a known location
-    # AgentSmith.replaceContext(replicateAgent)
-    # AgentSmith.generateTree(ATTACKER, SERVICE, 4)
-    # # Uploading Agent Replication to target
-    # print("Copy Agent To target")
-    # AgentSmith.attackTargets(possibleTargets)
+    print("\n\nAgent Smith")
+    AgentSmith = SimpleAgent("Smith", unifiedContext3, ATTACKER, SMITH)
 
 
