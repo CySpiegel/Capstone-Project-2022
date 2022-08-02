@@ -169,5 +169,5 @@ if __name__ == "__main__":
     # # Main goal: Fing Targets with open SSH services and upload itself to the remote system
     print("\n\nAgent Smith")
     AgentSmith = SimpleAgent("Smith", unifiedContext3, ATTACKER, SMITH)
-
+    AgentSmith.run()
 
