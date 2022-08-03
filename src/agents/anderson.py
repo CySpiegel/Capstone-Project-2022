@@ -1,8 +1,16 @@
 # ANDERSON Actions
+# ANDERSON = "anderson"
+# ANDERSON_TRANSFREFILE = "transferFile"
+# ANDERSON_SUBACTION = "downloadFile"
+# ANDERSON_FILENAME = "user.txt"
+# ANDERSON_TARGET_NAME = "user"
+# ANDERSON_NMAP_FLAG = "-sS"
+# ANDERSON_CIDR = "24"
+
 ANDERSON = "anderson"
 ANDERSON_TRANSFREFILE = "transferFile"
 ANDERSON_SUBACTION = "downloadFile"
 ANDERSON_FILENAME = "user.txt"
-ANDERSON_TARGET_NAME = "user"
+ANDERSON_TARGET_NAME = "ubuntu"
 ANDERSON_NMAP_FLAG = "-sS"
 ANDERSON_CIDR = "24"

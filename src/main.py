@@ -153,9 +153,9 @@ if __name__ == "__main__":
 
     # Agent Bob
     # Bob is well Bob and will map the network and randomly chose an IP to download the flag from
-    print("\n\nAgent Bob")
-    AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
-    AgentBob.run()
+    # print("\n\nAgent Bob")
+    # AgentBob = SimpleAgent("Bob", unifiedContext, ATTACKER, BOB)
+    # AgentBob.run()
 
 
     # # Agent Anderson
@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
     # # Agent Smith
     # # Main goal: Fing Targets with open SSH services and upload itself to the remote system
-    print("\n\nAgent Smith")
-    AgentSmith = SimpleAgent("Smith", unifiedContext3, ATTACKER, SMITH)
-    AgentSmith.run()
+    # print("\n\nAgent Smith")
+    # AgentSmith = SimpleAgent("Smith", unifiedContext3, ATTACKER, SMITH)
+    # AgentSmith.run()
 

@@ -27,6 +27,12 @@ PASSWD = ""
 REMOTEDIR = "/opt"
 LOCALDIR = "/Capstone-Project-2022/downloads"
 
+
+# USERNAME = "spiegel"
+# PASSWD = "1226"
+# REMOTEDIR = "/home/spiegel"
+# LOCALDIR = "/home/spiegel/Capstone-Project-2022/downloads"
+
 # defining types of agents as constant strings
 ATTACKER = 'attacker'
 
@@ -176,16 +182,17 @@ def smithbrain(self, input_nodes, context):
 	# Adding target to context
 	context['ip address'] = ""
 
-	# RECON NETWORK
-	print("Smith is performing recon")
-	context["action"] = SCANNETWORKSERVICES
-	context['service'] = RECON
-	service = context['service']
-	# Set the Recon Tool to use
-	context["recontool"] =  NMAP
-	context["nmapFlags"] = SMITH_NMAP_FLAG
+
 
 	for subnet in GALAXY_SUBNET_LIST:
+		# RECON NETWORK
+		print("Smith is performing recon")
+		context["action"] = SCANNETWORKSERVICES
+		context['service'] = RECON
+		service = context['service']
+		# Set the Recon Tool to use
+		context["recontool"] =  NMAP
+		context["nmapFlags"] = SMITH_NMAP_FLAG
 		# Set the IP CIDR to scan with the above tool
 		context["ipRange"] = getCIDRrange(subnet, SMITH_CIDR)
 		print("Performing Recon")
@@ -193,33 +200,34 @@ def smithbrain(self, input_nodes, context):
 		# this will allow for expansion of child nodes for more services
 		services = {}
 		services = dictActions(input_nodes, context)
-		print("Bobes available services actions",service)
+		print("Smith available services actions",service)
 		performAction(services, service, context)
 
 		# Filter Targets based on available SSH service
-		print("Anderson, filtering for open SSH services")
+		print("Smith, filtering for open SSH services")
 		targetList = filterForService(context, SSH)
 		print("Targets: ", targetList)
 		# Select the Target to download file from
-		targets = filterByMachineName(context, targetList, SMITH_TARGET_NAME)
-		target = dictToList(targets)
-		for box in target:
-			address = box[0]
-			port = box[1]
-			context["action"] = SMITH_TRANSFREFILE
-			context["subaction"] = SMITH_SUBACTION
-			context['service'] = SERVICE
-			context['protocol'] =  SSH
-			context["port"] = port
+		if targetList != []:
+			targets = filterByMachineName(context, targetList, SMITH_TARGET_NAME)
+			target = dictToList(targets)
+			for box in target:
+				address = box[0]
+				port = box[1]
+				context["action"] = SMITH_TRANSFREFILE
+				context["subaction"] = SMITH_SUBACTION
+				context['service'] = SERVICE
+				context['protocol'] =  SSH
+				context["port"] = port
 
-			context["ip address"] = address
-			service = context['service']
-			context["localDirectory"] = SMITH_DIRECTORY
-			context["remoteDirectory"] = SMITH_TARGET_DIRECTORY
+				context["ip address"] = address
+				service = context['service']
+				context["localDirectory"] = SMITH_DIRECTORY
+				context["remoteDirectory"] = SMITH_TARGET_DIRECTORY
 
-			print("Performing Services")
-			print(services)
-			performAction(services, service, context)
+				print("Performing Services")
+				print(services)
+				performAction(services, service, context)
 	print("Agent Smith Complete")
 
 ######################################################################################
