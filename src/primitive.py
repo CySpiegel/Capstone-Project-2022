@@ -230,8 +230,9 @@ def smithbrain(self, input_nodes, context):
 				print("Performing Services")
 				print(services)
 				performAction(services, service, context)
-				context["action"] = "remoteCommand"
-				performAction(services, service, context)
+
+				# context["action"] = "remoteCommand"
+				# performAction(services, service, context)
 	print("Agent Smith Complete")
 
 ######################################################################################
