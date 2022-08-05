@@ -349,6 +349,7 @@ def remotecommand(self, input_nodes, context):
 	# Getting SSH object from context
 	ssh = context["ssh"]
 	send_command(ssh, command)
+	ssh.close()
 
 
 
